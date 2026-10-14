@@ -1818,7 +1818,7 @@ function kpFit(){try{kpIcons()}catch(e){}const kp=$('kp');if(!kp||!kp.offsetPare
  const it=[...kp.querySelectorAll('[data-kpi]')].map(c=>({c,b:c.querySelector(':scope>b'),i:c.querySelector(':scope>em'),l:c.querySelector(':scope>span')})).filter(x=>x.b);
  const rr=el=>{const r=document.createRange();r.selectNodeContents(el);return r.getBoundingClientRect()};
  const bad=()=>it.some(({c,b,i})=>{const C=c.getBoundingClientRect(),T=rr(b);if(!T.width)return false;if(T.right>C.right-4)return true;if(!i||getComputedStyle(i).position!=='absolute')return false;const I=i.getBoundingClientRect();return T.right>I.left-4&&T.left<I.right&&T.bottom>I.top&&T.top<I.bottom});
- const lb=()=>it.some(x=>x.l&&x.l.scrollWidth>x.l.clientWidth+1);
+ const lb=()=>it.some(x=>{if(!x.l)return false;if(x.l.scrollWidth>x.l.clientWidth+1)return true;const C=x.c.getBoundingClientRect(),L=rr(x.l);return L.width>0&&L.right>C.right-6});
  /* ตัวเลขทุกการ์ดขนาดเท่ากัน: ลดพร้อมกันจนไม่มีใบไหนล้น/ทับไอคอน */
  kp.classList.remove('klw');let s=27,n=0;kp.style.setProperty('--kn',s+'px');while(bad()&&s>16&&n++<24){s--;kp.style.setProperty('--kn',s+'px')}
  let l=12.5,m=0;kp.style.setProperty('--kl',l+'px');while(lb()&&l>11&&m++<8){l-=.5;kp.style.setProperty('--kl',l+'px')}kp.classList.toggle('klw',lb())}
