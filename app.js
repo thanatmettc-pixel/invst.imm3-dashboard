@@ -2690,6 +2690,8 @@ var SP2=false,SP2S={};
 
 /* ===== TM3 WEB v2 — อ่านชีตผ่าน Apps Script + อัปเดตสดทุก POLL วินาที ===== */
 (function(){var B=window.__WEB;if(!B)return;
+ /* หน้าต่างจอนำเสนอ (2 จอ) รับข้อมูลจากจอแรก — ไม่ต้องเชื่อม Apps Script */
+ var isScr=false;try{isScr=!!SCR}catch(e){}if(isScr||(window.opener&&!window.google)){document.body.classList.add('web');return}
  var run=function(fn){var a=[].slice.call(arguments,1);return new Promise(function(ok,no){if(!window.google||!google.script||!google.script.run)return no(new Error('no google.script.run'));var r=google.script.run.withSuccessHandler(ok).withFailureHandler(no);r[fn].apply(r,a)})};
  var INIT=B.init||{},ST=Object.assign({},B.stamp||{});
  var same=function(a,b){var x=gsParseLink(a),y=gsParseLink(b);return !!(x&&y&&x.id===y.id&&x.gid===y.gid)};
