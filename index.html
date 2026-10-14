@@ -2230,7 +2230,14 @@ body.split2.present #sp2 .cmpbar{display:flex!important}
 /* v210 จอแคบ (มือถือ/แผงข้าง): การ์ด KPI เพิกถอน/IO ใช้ 2 คอลัมน์เหมือนแดชบอร์ดจับกุม */
 body.rflow.rvmode #sheet .kp,body.rflow.iomode #sheet .kp,body.rflow.rvmode #sheet #kp,body.rflow.iomode #sheet #kp{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 body.rflow.rvmode #sheet .kp>*,body.rflow.iomode #sheet .kp>*{min-width:0}
-</style><script>/* TM3 WEB v2 — ข้อมูลตั้งต้นจาก Apps Script */
+</style><script>/* ตัวแสดงข้อผิดพลาด (ช่วยหาสาเหตุบนเซิร์ฟเวอร์จริง) */
+(function(){var E=window.__werr=[];var show=function(){var b=document.getElementById('werr');if(!E.length)return;if(!b){b=document.createElement('div');b.id='werr';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#7f1d1d;color:#fff;font:12px/1.5 monospace;padding:10px 12px;border-radius:10px;max-height:45vh;overflow:auto;white-space:pre-wrap;box-shadow:0 6px 24px rgba(0,0,0,.4)';(document.body||document.documentElement).appendChild(b)}b.textContent='⚠️ ข้อผิดพลาดของหน้าเว็บ (ถ่ายภาพส่งให้ Claude):\n'+E.slice(0,12).join('\n')};
+window.__werrShow=show;
+window.addEventListener('error',function(e){var t=e.target;if(t&&t!==window&&(t.src||t.href)){E.push('โหลดไฟล์ไม่สำเร็จ: '+(t.src||t.href))}else{E.push((e.message||'error')+' @ '+(e.lineno||'?')+':'+(e.colno||'?'))}setTimeout(show,50)},true);
+window.addEventListener('unhandledrejection',function(e){var r=e.reason;E.push('promise: '+((r&&(r.message||r.code))||r));setTimeout(show,50)});
+window.addEventListener('load',function(){setTimeout(function(){if(!window.Chart)E.push('ไม่พบ Chart.js (โหลดจาก cdnjs ไม่ได้)');if(!window.google||!google.script)E.push('ไม่พบ google.script.run');show()},2500)});})();
+</script>
+<script>/* TM3 WEB v2 — ข้อมูลตั้งต้นจาก Apps Script */
 (function(){var B=__TM3_WEB__;window.__WEB=B;
 try{localStorage.setItem('tm3_gssrc',JSON.stringify(B.src));localStorage.setItem('tm3_gsurl',B.src[0].url);localStorage.removeItem('tm3_vp');localStorage.setItem('tm3_gsauto','0')}catch(e){}
 try{sessionStorage.setItem('tm3_unl','0')}catch(e){}
