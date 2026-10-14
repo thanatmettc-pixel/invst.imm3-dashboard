@@ -2697,7 +2697,7 @@ var SP2=false,SP2S={};
  var same=function(a,b){var x=gsParseLink(a),y=gsParseLink(b);return !!(x&&y&&x.id===y.id&&x.gid===y.gid)};
  /* แหล่งข้อมูลกลางของแอป → Apps Script (ค่าชุดแรกฝังมากับหน้าเว็บแล้ว) */
  window.gsViaConnector=async function(link){for(var u in INIT){if(same(u,link)){var v=INIT[u];delete INIT[u];return v}}return await run('getValues',link,B.k)};
- window.vSnap=function(){};window.gsAuto=function(){};window.rvOffAI=function(){};
+ window.vSnap=function(){};window.gsAuto=function(){};window.rvOffAI=function(){};window.aiAuto=function(){};
  var cl=document.body.classList;cl.add('web','dashonly','blurpii');document.documentElement.classList.add('dashonly');
  try{window.__setBlur&&window.__setBlur(true)}catch(e){}
  /* ป้ายสถานะมุมล่างซ้าย */
