@@ -2715,6 +2715,7 @@ var SP2=false,SP2S={};
   try{var s=await run('stamp',B.k);fails=0;var ch=[];
    B.src.forEach(function(x){var u=Object.keys(s).filter(function(k){return same(k,x.url)})[0];if(u&&ST[u]!==s[u]){ST[u]=s[u];ch.push(x)}});
    if(ch.length){show('busy','พบข้อมูลใหม่ — กำลังอัปเดต…');for(var i=0;i<ch.length;i++){await sync(ch[i])}last=tf();try{render()}catch(e){}}
+   if(s.__ui&&B.uiv&&s.__ui!=='none'&&s.__ui!==B.uiv&&!document.getElementById('webnew')){var a=document.createElement('a');a.id='webnew';a.href=B.url||'#';a.target='_top';a.textContent='🔄 มีหน้าตาเว็บเวอร์ชันใหม่ — แตะเพื่อโหลด';a.style.cssText='position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:100040;background:#0037af;color:#fff;font:600 14px Prompt,Tahoma,sans-serif;padding:10px 18px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.35);text-decoration:none';document.body.appendChild(a)}
    show('','ข้อมูลสด · อัปเดต '+last)}
   catch(e){fails++;show('err','เชื่อมต่อขัดข้อง — กำลังลองใหม่ ('+fails+')')}
   busy=false};
