@@ -2230,6 +2230,9 @@ body.split2.present #sp2 .cmpbar{display:flex!important}
 /* v210 จอแคบ (มือถือ/แผงข้าง): การ์ด KPI เพิกถอน/IO ใช้ 2 คอลัมน์เหมือนแดชบอร์ดจับกุม */
 body.rflow.rvmode #sheet .kp,body.rflow.iomode #sheet .kp,body.rflow.rvmode #sheet #kp,body.rflow.iomode #sheet #kp{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 body.rflow.rvmode #sheet .kp>*,body.rflow.iomode #sheet .kp>*{min-width:0}
+/* v211 เมนูเลือกขนาดจอ/เมนูในแถบบน ต้องอยู่เหนือแถบลอยบนแดชบอร์ด (dock z-index 6 > nav 5) */
+nav{z-index:8}
+nav:has(#vpsel.open),nav:has(.open){z-index:100025}
 </style><script>/* ตัวแสดงข้อผิดพลาด (ช่วยหาสาเหตุบนเซิร์ฟเวอร์จริง) */
 (function(){var E=window.__werr=[];var show=function(){var b=document.getElementById('werr');if(!E.length)return;if(!b){b=document.createElement('div');b.id='werr';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#7f1d1d;color:#fff;font:12px/1.5 monospace;padding:10px 12px;border-radius:10px;max-height:45vh;overflow:auto;white-space:pre-wrap;box-shadow:0 6px 24px rgba(0,0,0,.4)';(document.body||document.documentElement).appendChild(b)}b.textContent='⚠️ ข้อผิดพลาดของหน้าเว็บ (ถ่ายภาพส่งให้ Claude):\n'+E.slice(0,12).join('\n')};
 window.__werrShow=show;
