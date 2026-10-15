@@ -1252,9 +1252,10 @@ aiSync();
   const h=Math.min(P.scrollHeight,280),below=innerHeight-r.bottom,up=below<h+12&&r.top>below;P.style.minWidth=Math.max(r.width,110)+'px';P.style.maxHeight=Math.min(280,Math.max(120,(up?r.top:below)-12))+'px';
   P.style.left=Math.max(4,Math.min(r.left,innerWidth-P.offsetWidth-4))+'px';P.style.top=(up?Math.max(4,r.top-P.offsetHeight):r.bottom)+'px';const on=P.querySelector('.on');if(on)P.scrollTop=Math.max(0,on.offsetTop-60)};
  const isT=e=>e&&(e.tagName=='SELECT'||e.tagName=='INPUT')&&cfg(e);
- document.addEventListener('mouseover',e=>{const t=e.target;if(P.contains(t)){clearTimeout(T);return}if(isT(t)&&!t.matches(':focus'))show(t)});
- document.addEventListener('mouseout',e=>{if(isT(e.target)||P.contains(e.target)){const to=e.relatedTarget;if(to&&(P.contains(to)||to===cur))return;later()}});
- document.addEventListener('mousedown',e=>{if(!P.contains(e.target))hide()},true);document.addEventListener('scroll',e=>{if(e.target!==P&&!P.contains(e.target))hide()},true);addEventListener('resize',hide);
+ /* v219 เปิดตัวเลือกเมื่อ "คลิก" เท่านั้น (ไม่เด้งตอนเอาเมาส์ชี้) — เลือกแล้วปิดเอง · คลิกช่องเดิมซ้ำ/คลิกที่อื่น/กด Esc เพื่อปิด */
+ document.addEventListener('mousedown',e=>{const t=e.target;if(P.contains(t))return;if(e.button===0&&isT(t)){if(t.tagName=='SELECT')e.preventDefault();if(cur===t&&!P.hidden){hide();return}hide();show(t);if(t.tagName=='SELECT')try{t.focus({preventScroll:true})}catch(x){}return}hide()},true);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!P.hidden)hide()},true);
+ document.addEventListener('input',e=>{if(cur&&e.target===cur&&e.isTrusted)hide()},true);document.addEventListener('scroll',e=>{if(e.target!==P&&!P.contains(e.target))hide()},true);addEventListener('resize',hide);
  P.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!cur)return;const el=cur,o=OP[+b.dataset.i];if(!o)return;hide();if(el.id=='charge'||el.id=='rel'||el.id=='joint'){const L=el.value.split(/[,，]/).map(x=>x.trim()).filter(Boolean),k=ck(o[0]),ix=L.findIndex(x=>ck(x)==k);if(ix>=0)L.splice(ix,1);else L.push(o[0]);el.value=L.join(', ')}else el.value=o[0];el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))});
 })();
 // cyber reticle on click (compositor-only animation)
