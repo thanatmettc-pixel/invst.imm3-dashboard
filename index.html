@@ -2266,6 +2266,8 @@ body.split2.sp2v #sp2h{scroll-margin-top:110px}
 body.split2:not(.sp2v) #sp2{container-type:inline-size;container-name:sp2}
 @container sp2 (max-width:560px){#flt2 .fq{grid-template-columns:minmax(0,1fr)!important}}
 body.split2 #sp2 .fseg{flex-wrap:wrap}
+/* v217 มือถือ (rflow): แถบเลือกแดชบอร์ดไม่ลอยทับข้อความสรุป — ย้ายลงมาอยู่ใต้สรุป */
+body.rflow #sheet .ins>.dock{position:relative!important;right:auto!important;bottom:auto!important;opacity:1!important;grid-column:1/-1;align-self:end;justify-self:end;margin:10px auto 0;width:max-content;max-width:100%;flex-wrap:wrap;justify-content:center;border-radius:16px!important;order:99}
 </style><script>/* ตัวแสดงข้อผิดพลาด (ช่วยหาสาเหตุบนเซิร์ฟเวอร์จริง) */
 (function(){var E=window.__werr=[];var show=function(){var b=document.getElementById('werr');if(!E.length)return;if(!b){b=document.createElement('div');b.id='werr';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#7f1d1d;color:#fff;font:12px/1.5 monospace;padding:10px 12px;border-radius:10px;max-height:45vh;overflow:auto;white-space:pre-wrap;box-shadow:0 6px 24px rgba(0,0,0,.4)';(document.body||document.documentElement).appendChild(b)}b.textContent='⚠️ ข้อผิดพลาดของหน้าเว็บ (ถ่ายภาพส่งให้ Claude):\n'+E.slice(0,12).join('\n')};
 window.__werrShow=show;
