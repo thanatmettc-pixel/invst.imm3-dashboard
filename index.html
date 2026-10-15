@@ -2134,7 +2134,7 @@ body.split2 #sp2 .rvrw{grid-template-columns:auto minmax(0,1fr)!important}
 #sp2r .sp2fc:not(.on)::before{content:"＋ "}
 #sp2r .sp2hint{display:block;min-height:0;color:#b45309;font-size:11.5px;margin:0 0 6px}
 #sp2r .sp2hint:empty{display:none}
-#sp2r textarea#sp2ta{width:100%;box-sizing:border-box;min-height:200px;resize:vertical;font:13.5px/1.6 inherit;font-family:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--b,#cbd5e1);background:#fff;color:var(--t,#0f172a);white-space:pre-wrap}
+#sp2r textarea#sp2ta{width:100%;box-sizing:border-box;min-height:200px;resize:vertical;font:13.5px/1.6 inherit;font-family:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--b,#cbd5e1);background:var(--c,#fff);color:var(--t,#0f172a);white-space:pre-wrap}
 #sp2r .sp2st{min-height:16px;font-size:12px;color:#15803d;margin-top:4px}
 body:not(.split2):not(.dmtools) #sp2d,body:not(.split2):not(.dmtools) #sp2r{display:none!important}
 body:not(.split2) #s>.sp2c{margin:0 0 12px}
@@ -2240,6 +2240,8 @@ body.rflow:not(.rvmode):not(.iomode) #sheet .kp>*:last-child:nth-child(odd){grid
 body.rflow:not(.rvmode):not(.iomode) #sheet .kp .pr2>*{min-width:0}
 body.rflow:not(.rvmode):not(.iomode) #sheet .kp .pr2 b{font-size:24px!important}
 body.rflow:not(.rvmode):not(.iomode) #sheet .kp .pr2 span{white-space:nowrap!important}
+/* v215 ธีมมืด: กล่องข้อความสรุปรายงานต้องอ่านออก */
+#sp2r textarea#sp2ta{background:var(--c,#fff)!important;color:var(--t,#0f172a)!important;-webkit-text-fill-color:var(--t,#0f172a)!important;opacity:1!important}
 </style><script>/* ตัวแสดงข้อผิดพลาด (ช่วยหาสาเหตุบนเซิร์ฟเวอร์จริง) */
 (function(){var E=window.__werr=[];var show=function(){var b=document.getElementById('werr');if(!E.length)return;if(!b){b=document.createElement('div');b.id='werr';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#7f1d1d;color:#fff;font:12px/1.5 monospace;padding:10px 12px;border-radius:10px;max-height:45vh;overflow:auto;white-space:pre-wrap;box-shadow:0 6px 24px rgba(0,0,0,.4)';(document.body||document.documentElement).appendChild(b)}b.textContent='⚠️ ข้อผิดพลาดของหน้าเว็บ (ถ่ายภาพส่งให้ Claude):\n'+E.slice(0,12).join('\n')};
 window.__werrShow=show;
