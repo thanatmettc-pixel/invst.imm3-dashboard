@@ -2696,7 +2696,22 @@ var SP2=false,SP2S={};
  var INIT=B.init||{},ST=Object.assign({},B.stamp||{});
  var same=function(a,b){var x=gsParseLink(a),y=gsParseLink(b);return !!(x&&y&&x.id===y.id&&x.gid===y.gid)};
  /* แหล่งข้อมูลกลางของแอป → Apps Script (ค่าชุดแรกฝังมากับหน้าเว็บแล้ว) */
- window.gsViaConnector=async function(link){for(var u in INIT){if(same(u,link)){var v=INIT[u];delete INIT[u];return v}}return await run('getValues',link,B.k)};
+ /* แคชข้อมูลตามรหัสชีต: ถ้าชีตไม่เปลี่ยน ไม่ต้องดึงจากเซิร์ฟเวอร์ซ้ำ (กดเปลี่ยนหน้า/แดชบอร์ดแล้วไม่ต้องรอ ไม่กระตุก) */
+ var CACHE={},GOT={},APPLIED={};
+ var keyOf=function(link){var ks=Object.keys(ST).concat(Object.keys(INIT));for(var i=0;i<ks.length;i++)if(ks[i]!=='__ui'&&same(ks[i],link))return ks[i];return null};
+ window.gsViaConnector=async function(link){var u=keyOf(link);
+  for(var x in INIT){if(same(x,link)){var v=INIT[x];delete INIT[x];if(u){CACHE[u]={h:ST[u],v:v};GOT[u]=ST[u]}return v}}
+  if(u&&CACHE[u]&&CACHE[u].h===ST[u]){GOT[u]=ST[u];return CACHE[u].v}
+  var h=u?ST[u]:null,r=await run('getValues',link,B.k);if(u){CACHE[u]={h:h,v:r};GOT[u]=h}return r};
+ /* ข้ามการคำนวณ/วาดใหม่ เมื่อข้อมูลชุดนั้นไม่ได้เปลี่ยนจากที่แสดงอยู่ */
+ var urlsOf=function(m){return B.src.filter(function(x){return m==='gs'?(x.mode!=='rv'&&x.mode!=='io'):x.mode===m}).map(function(x){return keyOf(x.url)}).filter(Boolean)};
+ var sig=function(m,T){return urlsOf(m).map(function(u){return T[u]||''}).join('|')};
+ ['gs','rv','io'].forEach(function(m){var n=m+'Sync',f=window[n];if(typeof f!=='function')return;
+  window[n]=async function(){var cur=sig(m,ST);if(APPLIED[m]&&APPLIED[m]===cur)return;urlsOf(m).forEach(function(u){delete GOT[u]});
+   var r=await f.apply(this,arguments);var g=sig(m,GOT);if(g.split('|').every(Boolean))APPLIED[m]=g;return r}});
+ var gsSync=window.gsSync,rvSync=window.rvSync,ioSync=window.ioSync;
+ /* ไม่อัปเดตข้อมูลขณะผู้ใช้กำลังแตะ/เลื่อนจอ — รอให้หยุดก่อน */
+ var LASTIN=0;['touchstart','touchmove','pointerdown','wheel','scroll','keydown'].forEach(function(e){addEventListener(e,function(){LASTIN=Date.now()},{passive:true,capture:true})});
  window.vSnap=function(){};window.gsAuto=function(){};window.rvOffAI=function(){};window.aiAuto=function(){};
  var cl=document.body.classList;cl.add('web','dashonly','blurpii');document.documentElement.classList.add('dashonly');
  try{window.__setBlur&&window.__setBlur(true)}catch(e){}
@@ -2712,9 +2727,9 @@ var SP2=false,SP2S={};
  /* เช็กการเปลี่ยนแปลง */
  var fails=0,busy=false;
  var tick=async function(){if(busy)return;if(document.hidden){return}busy=true;
-  try{var s=await run('stamp',B.k);fails=0;var ch=[];
+  try{if(Date.now()-LASTIN<1500){busy=false;return}var s=await run('stamp',B.k);fails=0;var ch=[];
    B.src.forEach(function(x){var u=Object.keys(s).filter(function(k){return same(k,x.url)})[0];if(u&&ST[u]!==s[u]){ST[u]=s[u];ch.push(x)}});
-   if(ch.length){show('busy','พบข้อมูลใหม่ — กำลังอัปเดต…');for(var i=0;i<ch.length;i++){await sync(ch[i])}last=tf();try{render()}catch(e){}}
+   if(ch.length){show('busy','พบข้อมูลใหม่ — กำลังอัปเดต…');for(var i=0;i<ch.length;i++){await sync(ch[i])}last=tf()}
    if(s.__ui&&B.uiv&&s.__ui!=='none'&&s.__ui!==B.uiv&&!document.getElementById('webnew')){var a=document.createElement('a');a.id='webnew';a.href=B.url||'#';a.target='_top';a.textContent='🔄 มีหน้าตาเว็บเวอร์ชันใหม่ — แตะเพื่อโหลด';a.style.cssText='position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:100040;background:#0037af;color:#fff;font:600 14px Prompt,Tahoma,sans-serif;padding:10px 18px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.35);text-decoration:none';document.body.appendChild(a)}
    show('','ข้อมูลสด · อัปเดต '+last)}
   catch(e){fails++;show('err','เชื่อมต่อขัดข้อง — กำลังลองใหม่ ('+fails+')')}
