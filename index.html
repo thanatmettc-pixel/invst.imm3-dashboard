@@ -2320,7 +2320,6 @@ body.web #sheet{padding-bottom:44px}
 <div><label>การปฏิบัติ <b>*</b></label><select id="type"><option>จับเอง</option><option>ร่วมจับ</option></select></div>
 <div id="jw"><label>หน่วยที่ร่วมจับ</label><input id="joint" placeholder="เช่น ตชด., ปปส."></div>
 <div><label>พื้นที่จังหวัด</label><input id="place" list="pl" placeholder="พิมพ์เพื่อค้นหา เช่น ชลบุรี"><datalist id="pl"></datalist></div>
-<div><label>การข่าว</label><select id="intel"></select></div>
 </div></fieldset>
 <fieldset class="sec s2"><button type="button" class="fclr" title="ล้างข้อมูลเฉพาะกรอบนี้">↺ ล้าง</button><legend><i>2</i>ข้อมูลผู้ต้องหา</legend><div class="fg">
 <div class=span2><label>ชื่อผู้ต้องหา</label><input id="name" placeholder="เช่น MR.ZHANG MIN / เจ้าบ้านคนไทย"></div>
@@ -2335,7 +2334,8 @@ body.web #sheet{padding-bottom:44px}
 <div><label>จำนวนราย</label><input type="number" id="num" min="1" value="1"></div>
 <div><label>จำนวนคดี</label><input type="number" id="cases" min="0" placeholder="เช่น 1"></div>
 <div><label>ยอดค่าปรับ (บาท)</label><input type="number" id="fine" min="0"></div>
-<div class=span2><label>ลิงก์ข่าว</label><input id="link" placeholder="https://..."></div>
+<div><label>การข่าว</label><select id="intel" aria-label="การข่าว"></select></div>
+<div class="span2 lkw"><label>ลิงก์ข่าว</label><input id="link" placeholder="https://..."></div>
 <div class=span2><label>หมายเหตุ</label><textarea id="note" rows="4" style="resize:vertical;min-height:88px"></textarea></div>
 </div></fieldset>
 <div class="actions"><button class="btn" id="clr">🗑️ ล้างฟอร์ม</button><button class="btn pr lg" id="save">💾 บันทึกข้อมูล</button></div></div>
@@ -2392,4 +2392,4 @@ body.web #sheet{padding-bottom:44px}
 </div></div></div>
 <div id="dwbg" class="dwbg"></div><aside id="dw" class="dw" aria-hidden="true"><div class="dwh"><div class="dwhl"><div class="dwt" id="dwt"></div><div class="dwc" id="dwc"></div></div><button type="button" class="btn sm blbtn blb2" aria-pressed="false"><i class="bi"></i><span>เบลอชื่อ/พาสปอร์ต</span></button><button type="button" class="dwx" id="dwx" aria-label="ปิด">✕</button></div><div class="dwb" id="dwb"></div><div class="dwf"><button type="button" class="btn pr" id="dap">🔎 ใช้เป็นตัวกรอง แล้วเปิดในตารางข้อมูล</button><button type="button" class="btn" id="dad">📊 ใช้เป็นตัวกรองบนแดชบอร์ด</button></div></aside>
 </main>
-<script src="https://cdn.jsdelivr.net/gh/thanatmettc-pixel/invst.imm3-dashboard@7c21f62b9bd62fa4a2d3743fe632549268df01bb/app.js" crossorigin="anonymous" onerror="(window.__werr=window.__werr||[]).push('โหลดโค้ดแอปจาก jsDelivr ไม่สำเร็จ');window.__werrShow&&__werrShow()"></script></body></html>
+<script src="https://cdn.jsdelivr.net/gh/thanatmettc-pixel/invst.imm3-dashboard@2a92c13d6ba5b73157c478917847af365713daeb/app.js" crossorigin="anonymous" onerror="(window.__werr=window.__werr||[]).push('โหลดโค้ดแอปจาก jsDelivr ไม่สำเร็จ');window.__werrShow&&__werrShow()"></script></body></html>
