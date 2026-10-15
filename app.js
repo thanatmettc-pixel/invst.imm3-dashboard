@@ -934,7 +934,7 @@ function seg(sel){const w=document.createElement('div');w.className='seg';const 
 ['team','type','sex'].forEach(i=>seg($(i)));
 if(window.Chart&&Chart.defaults&&Chart.defaults.font){Chart.defaults.font.family='Prompt, Sarabun, Tahoma, sans-serif';Chart.defaults.font.size=11.5;Chart.defaults.font.weight='500';Chart.defaults.devicePixelRatio=3;Chart.defaults.color='#eef5ff';Chart.defaults.borderColor='rgba(120,180,255,.13)';if(Chart.defaults.elements&&Chart.defaults.elements.bar)Chart.defaults.elements.bar.borderRadius=4}
 const SI=['ไม่มีข่าว','ส่งข่าว','ข่าวซ้ำ','แถลงข่าว'];let IO=SI.slice();
-function fillIntel(){const v=$('intel').value;$('intel').innerHTML=IO.map(o=>'<option>'+esc(o)+'</option>').join('');$('intel').value=IO.includes(v)?v:IO[0]}
+function fillIntel(){const el=$('intel');if(!el)return;let ex=[];try{ex=[...new Set(D.map(r=>String(r.intel||'').trim()).filter(Boolean))].filter(x=>!SI.some(y=>ck(y)==ck(x)))}catch(e){}const L=SI.concat(ex),sig=L.join('|');if(el.dataset.sig===sig)return;el.dataset.sig=sig;IO=L;const v=el.value;el.innerHTML=IO.map(o=>'<option>'+esc(o)+'</option>').join('');el.value=IO.includes(v)?v:IO[0]}
 fillIntel();
 /* presentation mode */
 const PG=['f','d','s'],PGN={f:'บันทึกข้อมูล',d:'ตารางข้อมูล',s:'แดชบอร์ด'};let PRES=false,pHide;
@@ -2522,6 +2522,8 @@ var SP2=false,SP2S={};
   else{const rg=t.replace(/^ข้อมูล(วันที่)?\s*/,'').trim();p='ทั้งหมด'+(rg&&rg!=='-'?' ('+rg+')':'')}
   n.nodeValue='ห้วงเวลาการกรอง : '+p};
  ['render','rvRender','ioRender'].forEach(k=>{const f=window[k];if(typeof f!=='function')return;window[k]=function(){const r=f.apply(this,arguments);try{rngUp()}catch(e){}return r}});try{rngUp()}catch(e){}})();
+/* v218 การข่าว: ตัวเลือกตามค่าที่มีในชีต (นอกจาก 4 ค่าหลัก) — อัปเดตเมื่อข้อมูลเปลี่ยน */
+(()=>{const f=window.render;if(typeof f!=='function'||typeof fillIntel!=='function')return;window.render=function(){const r=f.apply(this,arguments);try{fillIntel()}catch(e){}return r}})();
 /*VP-START*/
 /* ===== VIEWPORT PICKER · PAGE STATE · FILTER STATE · MOTION ===== */
 (()=>{const RM=matchMedia('(prefers-reduced-motion: reduce)');const COARSE=matchMedia('(pointer:coarse)');
