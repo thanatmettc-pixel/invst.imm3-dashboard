@@ -2070,7 +2070,7 @@ body.split2 #sp2 .rvp,body.split2 #sp2 .card{max-width:none;width:auto}
 #sp2h .sp2x.on{opacity:1;background:#fee2e2}
 #sp2h .sp2x:hover{background:#dc2626;color:#fff}
 #p2btn.live{}
-body.split2 #sheet{zoom:1!important}
+body.split2:not(.sp2v) #sheet{zoom:1!important}
 body.split2.rvmode #sp2>.dctl,body.split2.rvmode #sp2>#flt2s,body.split2.rvmode #sp2>.aibox{display:none!important}
 body.split2:not(.rvmode) #sp2>#rvp,body.split2:not(.rvmode) #sp2>#iop,body.split2.iomode #sp2>#rvp,body.split2:not(.iomode) #sp2>#iop{display:none!important}
 body.split2 #sp2 .rvq4{grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -2242,6 +2242,30 @@ body.rflow:not(.rvmode):not(.iomode) #sheet .kp .pr2 b{font-size:24px!important}
 body.rflow:not(.rvmode):not(.iomode) #sheet .kp .pr2 span{white-space:nowrap!important}
 /* v215 ธีมมืด: กล่องข้อความสรุปรายงานต้องอ่านออก */
 #sp2r textarea#sp2ta{background:var(--c,#fff)!important;color:var(--t,#0f172a)!important;-webkit-text-fill-color:var(--t,#0f172a)!important;opacity:1!important}
+
+/* v216 ปุ่มแผงกรอง + จัดวางแผงกรองตามอุปกรณ์ */
+#fpbtn{margin-left:6px}
+nav .nw #fpbtn{background:var(--c);color:#0c2e72;border-color:var(--ln)}
+nav .nw #fpbtn.on{background:#0037af;color:#fff;border-color:#0037af}
+#fpbtn .pic{width:16px;height:16px}
+body.split2.sp2solo:not(.sp2v) #s{grid-template-columns:minmax(340px,34%) minmax(0,1fr)}
+body.split2.sp2v #s{display:flex!important;flex-direction:column;height:auto!important;overflow:visible!important;gap:10px}
+body.split2.sp2v #sp2{display:contents}
+body.split2.sp2v #sp2>*{order:2}
+body.split2.sp2v #sp2>#sp2h{order:1;position:relative;top:auto}
+body.split2.sp2v #s>.sc{order:3;position:relative;overflow:visible;align-self:stretch;justify-self:auto;width:auto!important;height:auto!important}
+body.split2.sp2v #sheet{position:relative;left:auto;top:auto}
+body.split2.sp2v #sp2>#sp2bar,body.split2.sp2v #sp2>#sp2d,body.split2.sp2v #sp2>#sp2r,body.split2.sp2v #sp2>.sp2c{order:4}
+body.split2.sp2v main{padding:0 8px 40px!important}
+@media(max-width:700px){nav .nw #fpbtn span{display:none}}
+body.split2.sp2v #s{align-items:stretch!important}
+body.split2.sp2v #sp2>*{width:auto!important;max-width:100%!important;min-width:0!important;align-self:stretch}
+body.split2.sp2v #sp2d{overflow-x:auto}
+body.split2.sp2v #sp2h{scroll-margin-top:110px}
+@media(max-width:700px){body.split2.sp2v #sp2 .dctl #flt2 .fq{grid-template-columns:minmax(0,1fr)!important}}
+body.split2:not(.sp2v) #sp2{container-type:inline-size;container-name:sp2}
+@container sp2 (max-width:560px){#flt2 .fq{grid-template-columns:minmax(0,1fr)!important}}
+body.split2 #sp2 .fseg{flex-wrap:wrap}
 </style><script>/* ตัวแสดงข้อผิดพลาด (ช่วยหาสาเหตุบนเซิร์ฟเวอร์จริง) */
 (function(){var E=window.__werr=[];var show=function(){var b=document.getElementById('werr');if(!E.length)return;if(!b){b=document.createElement('div');b.id='werr';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#7f1d1d;color:#fff;font:12px/1.5 monospace;padding:10px 12px;border-radius:10px;max-height:45vh;overflow:auto;white-space:pre-wrap;box-shadow:0 6px 24px rgba(0,0,0,.4)';(document.body||document.documentElement).appendChild(b)}b.textContent='⚠️ ข้อผิดพลาดของหน้าเว็บ (ถ่ายภาพส่งให้ Claude):\n'+E.slice(0,12).join('\n')};
 window.__werrShow=show;
@@ -2366,4 +2390,4 @@ body.web #sheet{padding-bottom:44px}
 </div></div></div>
 <div id="dwbg" class="dwbg"></div><aside id="dw" class="dw" aria-hidden="true"><div class="dwh"><div class="dwhl"><div class="dwt" id="dwt"></div><div class="dwc" id="dwc"></div></div><button type="button" class="btn sm blbtn blb2" aria-pressed="false"><i class="bi"></i><span>เบลอชื่อ/พาสปอร์ต</span></button><button type="button" class="dwx" id="dwx" aria-label="ปิด">✕</button></div><div class="dwb" id="dwb"></div><div class="dwf"><button type="button" class="btn pr" id="dap">🔎 ใช้เป็นตัวกรอง แล้วเปิดในตารางข้อมูล</button><button type="button" class="btn" id="dad">📊 ใช้เป็นตัวกรองบนแดชบอร์ด</button></div></aside>
 </main>
-<script src="https://cdn.jsdelivr.net/gh/thanatmettc-pixel/invst.imm3-dashboard@ce34a0a98c43724e7d578bf2054c2c88bf3f2920/app.js" crossorigin="anonymous" onerror="(window.__werr=window.__werr||[]).push('โหลดโค้ดแอปจาก jsDelivr ไม่สำเร็จ');window.__werrShow&&__werrShow()"></script></body></html>
+<script src="https://cdn.jsdelivr.net/gh/thanatmettc-pixel/invst.imm3-dashboard@7c21f62b9bd62fa4a2d3743fe632549268df01bb/app.js" crossorigin="anonymous" onerror="(window.__werr=window.__werr||[]).push('โหลดโค้ดแอปจาก jsDelivr ไม่สำเร็จ');window.__werrShow&&__werrShow()"></script></body></html>
