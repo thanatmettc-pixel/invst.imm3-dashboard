@@ -2561,21 +2561,27 @@ function xrParse(raw){const t=String(raw||'').replace(/[๐-๙]/g,c=>'๐๑๒
  if(!uv&&(m=t.match(/ตม\.?\s*จว\.?\s*([ก-๙]{2,})/)))uv=fixU('ตม.จว.'+m[1]);
  if(uv)o.unit=uv;
  ['name','nat','sex','age'].forEach(k=>{const v=b[k];if(v&&!(k==='sex'&&v==='ไม่ระบุ'))o[k]=v});
- if(m=body.match(/\b(MRS|MISS|MS|MR)\s*\.?\s*([A-Z][A-Z'\-]+(?:\s+[A-Z][A-Z'\-]+){0,5})/)){o.name=m[1]+'.'+m[2].trim();if(!o.sex)o.sex=m[1]==='MR'?'ชาย':'หญิง'}
+ if(m=body.match(/\b(MRS|MISS|MS|MR)\s*\.?\s*([A-Z][A-Z'\-]+(?:\s+[A-Z][A-Z'\-]+){0,5})/)){o.name=m[1]+'.'+m[2].replace(/\s+/g,' ').trim();if(!o.sex)o.sex=m[1]==='MR'?'ชาย':'หญิง'}
  /* เลขพาสปอร์ต = เลขเอกสารประจำตัวของผู้ต้องหา (พาสปอร์ต / CI / บัตร / เลขประชาชน) */
- let pp=b.pp||'';
+ let pp='';if(m=body.match(/(?:หนังสือเดินทาง|พาสปอร์ต|passport)\s*(?:เลขที่|เลข|no\.?|number)?\s*[:：.]?\s*([A-Z]{0,3})\s?(\d{5,10}[A-Z0-9]{0,2})(?![\d\/])/i))pp=m[1]+m[2];if(!pp)pp=b.pp||'';
  if(!pp&&(m=body.match(/(?:หนังสือเดินทาง|พาสปอร์ต|passport|หนังสือรับรอง[^\n]{0,80}?|เอกสาร[^\n]{0,60}?|บัตร[^\n]{0,30}?|เลขประจำตัว[^\n]{0,20}?)\s*(?:เลขที่|เลข|no\.?|number)\s*[:：.]?\s*([A-Z]{0,3}\d{5,10}[A-Z0-9]{0,2})(?![\d\/])/i)))pp=m[1];
  if(!pp&&(m=body.match(/\b([A-Z]{1,3}\d{6,9})\b(?!\s*\/)/)))pp=m[1];
  if(!pp&&(m=body.match(/(?<!\d)(\d[\d\s-]{11,16}\d)(?!\d)/))){const d=m[1].replace(/\D/g,'');if(d.length===13)pp=d}
  if(pp)o.pp=pp.toUpperCase();
  if(m=body.match(/(?:จำนวน|รวม)\s*(\d{1,3})\s*(?:ราย|คน)/))o.num=m[1];
- /* คดี: ดูเฉพาะข้อความหลัง "ความผิดฐาน/ข้อหา/กรณี" ในส่วนรายละเอียด (ไม่ใช่ข้อกฎหมายในข้อ 3) */
- const s3=body.search(/\n\s*3\s*[.)]|พิจารณาแล้ว/),det=s3>0?body.slice(0,s3):body;
+ if(!o.num&&(m=body.match(/ข้อ\s*2\.(\d+)\s*[-–]\s*2\.(\d+)/))&&+m[2]>+m[1])o.num=String(+m[2]-+m[1]+1);if(!o.num)o.num='1';
+ /* คดี: ตีความจากข้อ 3 (ข้อสรุปของ กก.สก. — มาตรา/เหตุที่เพิกถอน) ก่อน ถ้าไม่ชัดจึงดูความผิดในข้อ 2 */
+ const s3=body.search(/\n\s*3\s*[.)]|พิจารณาแล้ว/),det=s3>0?body.slice(0,s3):body,con=s3>0?body.slice(s3):'';
+ const chs=xrUniq('charge'),pick=v=>chs.find(x=>ck(x)===ck(v))||v;
+ const RULE=[[/12\s*\(\s*3\s*\)|ใบอนุญาตทำงาน|ทำงานโดยไม่|ทำงานที่ห้าม|การทำงานของคนต่างด้าว|ทำงานนอกเหนือ/,'ทำงานโดยไม่ได้รับอนุญาต'],
+  [/ยาเสพติด|เมทแอมเฟตามีน|ยาบ้า|ไอซ์|กัญชา|เฮโรอีน/,'ยาเสพติด'],
+  [/อยู่(?:ใน(?:ราช)?อาณาจักร)?เกินกำหนด|overstay/i,'overstay'],
+  [/หลบหนีเข้าเมือง|เข้าเมืองโดยไม่ได้รับอนุญาต|เข้ามาในราชอาณาจักรโดยไม่ได้รับอนุญาต/,'หลบหนีเข้าเมือง'],
+  [/หมายแดง|red\s*notice|interpol/i,'INTERPOLหมายแดง']];
+ let cv='';if(con){for(const [rx,v] of RULE){if(rx.test(con)){cv=pick(v);break}}if(!cv)cv=xrBest(con.replace(/มาตรา|พ\.ร\.บ\.|ประกอบ/g,' '),chs.filter(x=>ck(x).length>=4))}
  let seg='';if(m=det.match(/(?:ความผิดฐาน|ข้อหา|กรณี|ฐานความผิด)([\s\S]{0,260})/))seg=m[1];
- const chs=xrUniq('charge');let cv=seg?xrBest(seg,chs):'';
- if(!cv&&/ยาเสพติด|เมทแอมเฟตามีน|ยาบ้า|ไอซ์|กัญชา|เฮโรอีน/.test(seg||det))cv=chs.find(x=>x==='ยาเสพติด')||'ยาเสพติด';
- if(!cv&&/overstay|อยู่เกินกำหนด|อยู่ในราชอาณาจักรเกินกำหนด/i.test(seg||det))cv='overstay';
- if(!cv)cv=xrBest(seg||det,chs);
+ if(!cv&&seg){for(const [rx,v] of RULE){if(rx.test(seg)){cv=pick(v);break}}if(!cv)cv=xrBest(seg,chs)}
+ if(!cv)cv=xrBest(det,chs);
  if(!cv&&b.charge)cv=String(b.charge).split(/,\s*/)[0];
  if(cv)o.charge=cv;
  return o}
