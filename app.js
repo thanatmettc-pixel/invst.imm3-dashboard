@@ -2091,7 +2091,7 @@ var xdOpts=(k)=>[...new Set(RV.map(r=>r[k]).filter(v=>v&&v!=='ไม่ระบ
 /* ---------- ฟอร์ม ---------- */
 function xdForm(k){const X=$('xdf');if(!X)return;const E=XDE[k];
  if(k==='rv'){const o=E||{date:xdToday(),type:'เพิกถอน',num:'1',sex:'ไม่ระบุ'};
-  X.innerHTML=`<div class="card xdc"><div class="ch">${xdHd('rv',E?'แก้ไขข้อมูลเพิกถอน / ฟ้องใบแดง':'บันทึกเพิกถอน / ฟ้องใบแดง',E?'แถว '+E.row+' ในชีต “'+esc(rvSrc().name)+'”':'กรอกแล้วกดบันทึก ระบบเขียนลงชีตทันที',E?'edit':'')}<span class="req"><b>*</b> จำเป็นต้องกรอก</span></div>
+  X.innerHTML=(E?'':xrPasteCard())+`<div class="card xdc"><div class="ch">${xdHd('rv',E?'แก้ไขข้อมูลเพิกถอน / ฟ้องใบแดง':'บันทึกเพิกถอน / ฟ้องใบแดง',E?'แถว '+E.row+' ในชีต “'+esc(rvSrc().name)+'”':'กรอกแล้วกดบันทึก ระบบเขียนลงชีตทันที',E?'edit':'')}<span class="req"><b>*</b> จำเป็นต้องกรอก</span></div>
   <fieldset class="sec s1"><legend><i>1</i>ข้อมูลการดำเนินการ</legend><div class="fg">
    <div><label>วันที่ <b>*</b></label><input type="date" id="xr_date"></div>
    <div><label>การปฏิบัติ <b>*</b></label><select id="xr_type"><option>เพิกถอน</option><option>ฟ้องใบแดง</option></select></div>
@@ -2109,7 +2109,7 @@ function xdForm(k){const X=$('xdf');if(!X)return;const E=XDE[k];
    <div class="span2"><label>คดี</label><input id="xr_charge" list="xr_chgl" placeholder="เช่น Overstay"><datalist id="xr_chgl">${xdOpts('charge')}</datalist></div>
    <div class="span2"><label>หมายเหตุ</label><input id="xr_note"></div></div></fieldset>
   ${xdActs(k,E)}</div>${xdListCard(k)}`;
-  thDate($('xr_date'));['date','type','doc','off','unit','name','nat','sex','pp','age','num','charge','note'].forEach(f=>{const el=$('xr_'+f);if(el)el.value=o[f]==null?'':String(o[f])});if(!$('xr_num').value)$('xr_num').value='1'}
+  thDate($('xr_date'));['date','type','doc','off','unit','name','nat','sex','pp','age','num','charge','note'].forEach(f=>{const el=$('xr_'+f);if(el)el.value=o[f]==null?'':String(o[f])});if(!$('xr_num').value)$('xr_num').value='1';try{xrPasteBind()}catch(e){}}
  else{const one=!!E,o=E||{date:xdToday()};
   X.innerHTML=`<div class="card xdc"><div class="ch">${xdHd('io',E?'แก้ไขข้อมูล IO':'บันทึกผลงาน IO',E?'แถว '+E.row+' ในชีต “'+esc(ioSrc().name)+'”':'กรอกตัวเลขของแต่ละชุด แล้วกดบันทึก',E?'edit':'')}<span class="req"><b>*</b> จำเป็นต้องกรอก</span></div>
   <fieldset class="sec s1"><legend><i>1</i>วันที่รายงาน</legend><div class="fg">
@@ -2525,6 +2525,40 @@ var SP2=false,SP2S={};
  ['render','rvRender','ioRender'].forEach(k=>{const f=window[k];if(typeof f!=='function')return;window[k]=function(){const r=f.apply(this,arguments);try{rngUp()}catch(e){}return r}});try{rngUp()}catch(e){}})();
 /* v218 การข่าว: ตัวเลือกตามค่าที่มีในชีต (นอกจาก 4 ค่าหลัก) — อัปเดตเมื่อข้อมูลเปลี่ยน */
 (()=>{const f=window.render;if(typeof f!=='function'||typeof fillIntel!=='function')return;window.render=function(){const r=f.apply(this,arguments);try{fillIntel()}catch(e){}return r}})();
+
+/* ===== v220 บันทึกเพิกถอน/ฟ้องใบแดง: ช่องวางข้อความ → ประมวลผลแล้วกรอกฟอร์มอัตโนมัติ ===== */
+function xrPasteCard(){return `<div class="card pst xrp"><div class="psh"><div><b>📝 วางข้อความหนังสือ / รายงานเพิกถอน–ฟ้องใบแดง</b><p>วางข้อความ (จาก LINE, หนังสือขอเพิกถอน, รายงานผล ฯลฯ) แล้วกด “ประมวลผล” ระบบจะแยกข้อมูลลงช่องในฟอร์มด้านล่าง (ช่องที่กรอกให้จะมีกรอบสีเหลือง) ตรวจสอบก่อนกดบันทึก</p></div></div>
+<textarea id="xrptx" rows="3" placeholder="ตัวอย่าง: ที่ ตช 0029.45/1084 ลงวันที่ 30 ก.ย. 2569 ตม.จว.นนทบุรี ขอเพิกถอนการอนุญาตให้อยู่ในราชอาณาจักร MR.RAJ KUMAR สัญชาติอินเดีย เพศชาย อายุ 41 ปี หนังสือเดินทาง Z1234567 กรณีทำงานโดยไม่ได้รับอนุญาต พงส. ร.ต.อ.หญิง จารุมน อัตบุตร"></textarea>
+<div class="psa"><button type="button" class="btn pr" id="xrpgo">⚙️ ประมวลผลและกรอกฟอร์ม</button><button type="button" class="btn" id="xrpcl">ล้างข้อความ</button></div><div id="xrpms"></div></div>`}
+function xrUniq(k){return[...new Set(RV.map(r=>String(r[k]||'').trim()).filter(v=>v&&v!=='ไม่ระบุ'))]}
+function xrBest(t,list){const T=ck(t);let best='';list.forEach(v=>{const k=ck(v);if(k.length>=3&&T.includes(k)&&k.length>ck(best).length)best=v});return best}
+function xrParse(raw){const t=String(raw||'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/ /g,' ');const o={};let m;
+ let b={};try{b=pxLocal(t)}catch(e){}
+ o.date=pxDate(t)||'';
+ if(/ฟ้อง|ใบแดง/.test(t))o.type='ฟ้องใบแดง';else if(/เพิกถอน/.test(t))o.type='เพิกถอน';
+ if(m=t.match(/(\d{4}\.\d{1,3}(?:\.\d{1,3})?\s*\/\s*\d{1,6})/))o.doc=m[1].replace(/\s+/g,'');
+ const RK='(?:พล\\.?ต\\.?[อทต]\\.?|พ\\.?ต\\.?[อทต]\\.?|ร\\.?ต\\.?[อทต]\\.?|ด\\.?ต\\.?|จ\\.?ส\\.?ต\\.?|ส\\.?ต\\.?[อทต]\\.?)(?:\\s*หญิง)?';
+ const offs=xrUniq('off');let ov=xrBest(t,offs);
+ if(!ov&&(m=t.match(new RegExp('(?:พงส\\.?|พนักงานสอบสวน)(?:เจ้าของ(?:คดี|สำนวน))?\\s*[:：]?\\s*('+RK+'\\s*[ก-๙]{2,}\\s+[ก-๙]{2,})'))||t.match(new RegExp('('+RK+'\\s*[ก-๙]{2,}\\s+[ก-๙]{2,})'))))ov=m[1].replace(/\s+/g,' ').trim();
+ if(ov)o.off=ov;
+ const units=xrUniq('unit');let uv=xrBest(t,units);
+ if(!uv&&(m=t.match(/ตม\.?\s*จว\.?\s*([ก-๙]{2,}(?:\s?[ก-๙]+)?)/))){let p='';try{p=pxPre(m[1],PROVS,PA)}catch(e){}uv='ตม.จว.'+(p||m[1].trim())}
+ if(!uv&&(m=t.match(/(ตม\.?\s*(?:ทสภ|ทภ|ดม|สนข|[ก-๙]{2,})\.?)/)))uv=m[1].replace(/\s+/g,'');
+ if(uv)o.unit=uv;
+ ['name','nat','sex','pp','age'].forEach(k=>{const v=b[k];if(v&&!(k==='sex'&&v==='ไม่ระบุ'))o[k]=v});
+ if(m=t.match(/(?:จำนวน|รวม)\s*(\d{1,3})\s*(?:ราย|คน)/))o.num=m[1];
+ const chs=xrUniq('charge');let cv=xrBest(t,chs);if(!cv&&b.charge)cv=String(b.charge).split(/,\s*/)[0];if(!cv&&/overstay|อยู่เกินกำหนด|อยู่ในราชอาณาจักรเกินกำหนด/i.test(t))cv='overstay';
+ if(cv)o.charge=cv;
+ return o}
+function xrPasteBind(){const go=$('xrpgo'),ta=$('xrptx');if(!go||!ta||go.__b)return;go.__b=1;
+ const run=()=>{const v=ta.value.trim(),ms=$('xrpms');document.querySelectorAll('#xdf .af').forEach(e=>e.classList.remove('af'));if(!v){ms.innerHTML='<span class="mu">วางข้อความก่อน แล้วกดประมวลผล</span>';ta.focus();return}
+  const o=xrParse(v),LB={date:'วันที่',type:'การปฏิบัติ',doc:'เลขหนังสือ',off:'พงส.',unit:'ตม.จว.',name:'ชื่อ',nat:'สัญชาติ',sex:'เพศ',pp:'พาสปอร์ต',age:'อายุ',num:'จำนวนราย',charge:'คดี'};const got=[],miss=[];
+  Object.keys(LB).forEach(k=>{const el=$('xr_'+k);if(!el)return;const v=o[k];if(v!=null&&v!==''){if(el.tagName==='SELECT'&&![...el.options].some(x=>x.value===v))return;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));(el.type==='hidden'&&el.nextElementSibling?el.nextElementSibling:el).classList.add('af');got.push(LB[k])}else if(['date','name','nat','unit','charge'].includes(k))miss.push(LB[k])});
+  ms.innerHTML=got.length?'✅ กรอกให้แล้ว '+got.length+' ช่อง: '+got.map(esc).join(' · ')+(miss.length?'<br><small>⚠️ ไม่พบ: '+miss.map(esc).join(' · ')+' — กรอกเองได้</small>':''):'⚠️ ไม่พบข้อมูลที่แยกได้ — ลองวางข้อความที่มี วันที่ / ชื่อ / สัญชาติ / ตม.จว.';
+  const f=document.querySelector('#xdf .xdc');if(f)try{f.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
+ go.onclick=run;$('xrpcl').onclick=()=>{ta.value='';$('xrpms').innerHTML='';document.querySelectorAll('#xdf .af').forEach(e=>e.classList.remove('af'));ta.focus()};
+ ta.addEventListener('paste',()=>setTimeout(run,30));
+ ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();run()}})}
 /*VP-START*/
 /* ===== VIEWPORT PICKER · PAGE STATE · FILTER STATE · MOTION ===== */
 (()=>{const RM=matchMedia('(prefers-reduced-motion: reduce)');const COARSE=matchMedia('(pointer:coarse)');
