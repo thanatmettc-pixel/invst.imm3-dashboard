@@ -2533,22 +2533,50 @@ function xrPasteCard(){return `<div class="card pst xrp"><div class="psh"><div><
 <div class="psa"><button type="button" class="btn pr" id="xrpgo">⚙️ ประมวลผลและกรอกฟอร์ม</button><button type="button" class="btn" id="xrpcl">ล้างข้อความ</button></div><div id="xrpms"></div></div>`}
 function xrUniq(k){return[...new Set(RV.map(r=>String(r[k]||'').trim()).filter(v=>v&&v!=='ไม่ระบุ'))]}
 function xrBest(t,list){const T=ck(t);let best='';list.forEach(v=>{const k=ck(v);if(k.length>=3&&T.includes(k)&&k.length>ck(best).length)best=v});return best}
-function xrParse(raw){const t=String(raw||'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/ /g,' ');const o={};let m;
+function xrParse(raw){const t=String(raw||'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/ /g,' ').replace(/\r/g,'');const o={};let m;
  let b={};try{b=pxLocal(t)}catch(e){}
- o.date=pxDate(t)||'';
- if(/ฟ้อง|ใบแดง/.test(t))o.type='ฟ้องใบแดง';else if(/เพิกถอน/.test(t))o.type='เพิกถอน';
- if(m=t.match(/(\d{4}\.\d{1,3}(?:\.\d{1,3})?\s*\/\s*\d{1,6})/))o.doc=m[1].replace(/\s+/g,'');
- const RK='(?:พล\\.?ต\\.?[อทต]\\.?|พ\\.?ต\\.?[อทต]\\.?|ร\\.?ต\\.?[อทต]\\.?|ด\\.?ต\\.?|จ\\.?ส\\.?ต\\.?|ส\\.?ต\\.?[อทต]\\.?)(?:\\s*หญิง)?';
- const offs=xrUniq('off');let ov=xrBest(t,offs);
- if(!ov&&(m=t.match(new RegExp('(?:พงส\\.?|พนักงานสอบสวน)(?:เจ้าของ(?:คดี|สำนวน))?\\s*[:：]?\\s*('+RK+'\\s*[ก-๙]{2,}\\s+[ก-๙]{2,})'))||t.match(new RegExp('('+RK+'\\s*[ก-๙]{2,}\\s+[ก-๙]{2,})'))))ov=m[1].replace(/\s+/g,' ').trim();
+ /* ส่วนท้ายหนังสือ (หลัง "จึงเรียนมาเพื่อโปรดพิจารณา") = ผู้เสนอ/พงส. + วันที่ประมวลเรื่อง */
+ const ei=t.search(/จึงเรียน(?:มา)?เพื่อ/),tail=ei>=0?t.slice(ei):'',body=ei>=0?t.slice(0,ei):t;
+ /* วันที่: ใช้วันที่ท้ายหนังสือ (วันที่ประมวลเรื่อง) ก่อน ถ้าไม่มีจึงใช้วันที่แรกในข้อความ */
+ o.date=(tail&&pxDate(tail))||pxDate(t)||'';
+ /* การปฏิบัติ */
+ const nP=(t.match(/เพิกถอน/g)||[]).length;if(/ใบแดง/.test(t)&&!(nP>1&&!/ฟ้องใบแดง/.test(t)))o.type='ฟ้องใบแดง';else if(nP)o.type='เพิกถอน';else if(/ฟ้อง/.test(t))o.type='ฟ้องใบแดง';
+ /* เลขหนังสือ: บรรทัด "ที่ ..." บนสุด */
+ const DOC=/(\d{4}\.\d{1,3}(?:\.\d{1,3})?(?:\(\d+\))?\s*\/\s*\d{1,6})/;
+ if((m=t.match(new RegExp('^\\s*ที่\\s*(?:ตช\\.?\\s*)?'+DOC.source,'m')))||(m=t.match(DOC)))o.doc=m[1].replace(/\s+/g,'');
+ /* พงส. = ผู้ลงนามท้ายหนังสือ (ยศ + ชื่อในวงเล็บ) — เทียบกับรายชื่อในชีตเพื่อสะกดให้ตรง */
+ const RK='(?:ว่าที่\\s*)?(?:พล\\.?\\s*ต\\.?\\s*[อทต]\\.?|พ\\.?\\s*ต\\.?\\s*[อทต]\\.?|ร\\.?\\s*ต\\.?\\s*[อทต]\\.?|ด\\.?\\s*ต\\.?|จ\\.?\\s*ส\\.?\\s*ต\\.?|ส\\.?\\s*ต\\.?\\s*[อทต]\\.?)(?:\\s*หญิง)?';
+ const offs=xrUniq('off');let ov='';
+ const fixOff=(rk,nm)=>{rk=String(rk||'').replace(/\s+/g,'');nm=String(nm||'').replace(/[()（）]/g,' ').replace(/\s+/g,' ').trim();if(!nm)return'';const full=(rk?rk:'')+nm,kf=ck(full);const hit=offs.find(x=>ck(x)===kf);return hit||full};
+ if(tail&&(m=tail.match(new RegExp('('+RK+')[\\s\\n]*\\(?\\s*([ก-๙]{2,}\\s+[ก-๙]{2,})\\s*\\)?'))))ov=fixOff(m[1],m[2]);
+ if(!ov&&(m=t.match(new RegExp('(?:พงส\\.?|พนักงานสอบสวน)(?:เจ้าของ(?:คดี|สำนวน))?\\s*[:：]?\\s*('+RK+')\\s*([ก-๙]{2,}\\s+[ก-๙]{2,})'))))ov=fixOff(m[1],m[2]);
+ if(!ov)ov=xrBest(tail||t,offs);
+ if(!ov&&(m=t.match(new RegExp('('+RK+')\\s*([ก-๙]{2,}\\s+[ก-๙]{2,})'))))ov=fixOff(m[1],m[2]);
  if(ov)o.off=ov;
- const units=xrUniq('unit');let uv=xrBest(t,units);
- if(!uv&&(m=t.match(/ตม\.?\s*จว\.?\s*([ก-๙]{2,}(?:\s?[ก-๙]+)?)/))){let p='';try{p=pxPre(m[1],PROVS,PA)}catch(e){}uv='ตม.จว.'+(p||m[1].trim())}
- if(!uv&&(m=t.match(/(ตม\.?\s*(?:ทสภ|ทภ|ดม|สนข|[ก-๙]{2,})\.?)/)))uv=m[1].replace(/\s+/g,'');
+ /* ตม.จว.ที่ยื่นเรื่อง = หน่วยที่ "มีหนังสือ" มา (ข้อ 1) ไม่ใช่หน่วยอื่นที่ถูกอ้างถึงในเนื้อหา */
+ const units=xrUniq('unit'),fixU=x=>{x=String(x||'').replace(/\s+/g,'');const k=ck(x.replace(/^ตม\.?จว\.?/,''));const hit=units.find(u=>ck(u.replace(/^ตม\.?จว\.?/,''))===k);if(hit)return hit;let p='';try{p=pxPre(x.replace(/^ตม\.?จว\.?/,''),PROVS,PA)}catch(e){}return /^ตม\.?จว/.test(x)?'ตม.จว.'+(p||x.replace(/^ตม\.?จว\.?/,'')):x};
+ let uv='';
+ if(m=t.match(/(ตม\.?\s*จว\.?\s*[ก-๙]{2,}|ตม\.?\s*(?:ทสภ|ทภ|ดม)\.?|กก\.?\s*[ก-๙]{2,4}\.?\s*บก\.?\s*ตม\.?\s*\d)\s*(?:ได้)?มีหนังสือ/))uv=fixU(m[1]);
+ if(!uv&&(m=t.match(/ตาม(?:ที่)?\s*(ตม\.?\s*จว\.?\s*[ก-๙]{2,})\s*เสนอ/)))uv=fixU(m[1]);
+ if(!uv&&(m=t.match(/ตม\.?\s*จว\.?\s*([ก-๙]{2,})/)))uv=fixU('ตม.จว.'+m[1]);
  if(uv)o.unit=uv;
- ['name','nat','sex','pp','age'].forEach(k=>{const v=b[k];if(v&&!(k==='sex'&&v==='ไม่ระบุ'))o[k]=v});
- if(m=t.match(/(?:จำนวน|รวม)\s*(\d{1,3})\s*(?:ราย|คน)/))o.num=m[1];
- const chs=xrUniq('charge');let cv=xrBest(t,chs);if(!cv&&b.charge)cv=String(b.charge).split(/,\s*/)[0];if(!cv&&/overstay|อยู่เกินกำหนด|อยู่ในราชอาณาจักรเกินกำหนด/i.test(t))cv='overstay';
+ ['name','nat','sex','age'].forEach(k=>{const v=b[k];if(v&&!(k==='sex'&&v==='ไม่ระบุ'))o[k]=v});
+ if(m=body.match(/\b(MRS|MISS|MS|MR)\s*\.?\s*([A-Z][A-Z'\-]+(?:\s+[A-Z][A-Z'\-]+){0,5})/)){o.name=m[1]+'.'+m[2].trim();if(!o.sex)o.sex=m[1]==='MR'?'ชาย':'หญิง'}
+ /* เลขพาสปอร์ต = เลขเอกสารประจำตัวของผู้ต้องหา (พาสปอร์ต / CI / บัตร / เลขประชาชน) */
+ let pp=b.pp||'';
+ if(!pp&&(m=body.match(/(?:หนังสือเดินทาง|พาสปอร์ต|passport|หนังสือรับรอง[^\n]{0,80}?|เอกสาร[^\n]{0,60}?|บัตร[^\n]{0,30}?|เลขประจำตัว[^\n]{0,20}?)\s*(?:เลขที่|เลข|no\.?|number)\s*[:：.]?\s*([A-Z]{0,3}\d{5,10}[A-Z0-9]{0,2})(?![\d\/])/i)))pp=m[1];
+ if(!pp&&(m=body.match(/\b([A-Z]{1,3}\d{6,9})\b(?!\s*\/)/)))pp=m[1];
+ if(!pp&&(m=body.match(/(?<!\d)(\d[\d\s-]{11,16}\d)(?!\d)/))){const d=m[1].replace(/\D/g,'');if(d.length===13)pp=d}
+ if(pp)o.pp=pp.toUpperCase();
+ if(m=body.match(/(?:จำนวน|รวม)\s*(\d{1,3})\s*(?:ราย|คน)/))o.num=m[1];
+ /* คดี: ดูเฉพาะข้อความหลัง "ความผิดฐาน/ข้อหา/กรณี" ในส่วนรายละเอียด (ไม่ใช่ข้อกฎหมายในข้อ 3) */
+ const s3=body.search(/\n\s*3\s*[.)]|พิจารณาแล้ว/),det=s3>0?body.slice(0,s3):body;
+ let seg='';if(m=det.match(/(?:ความผิดฐาน|ข้อหา|กรณี|ฐานความผิด)([\s\S]{0,260})/))seg=m[1];
+ const chs=xrUniq('charge');let cv=seg?xrBest(seg,chs):'';
+ if(!cv&&/ยาเสพติด|เมทแอมเฟตามีน|ยาบ้า|ไอซ์|กัญชา|เฮโรอีน/.test(seg||det))cv=chs.find(x=>x==='ยาเสพติด')||'ยาเสพติด';
+ if(!cv&&/overstay|อยู่เกินกำหนด|อยู่ในราชอาณาจักรเกินกำหนด/i.test(seg||det))cv='overstay';
+ if(!cv)cv=xrBest(seg||det,chs);
+ if(!cv&&b.charge)cv=String(b.charge).split(/,\s*/)[0];
  if(cv)o.charge=cv;
  return o}
 function xrPasteBind(){const go=$('xrpgo'),ta=$('xrptx');if(!go||!ta||go.__b)return;go.__b=1;
