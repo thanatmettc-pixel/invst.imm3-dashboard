@@ -2227,10 +2227,11 @@ function xdTable(k){const X=$('xdd');if(!X)return;const f=XDF[k],src=k==='rv'?rv
  ${xdFltHtml(k)}
  <p class="note">${busy?'⏳ กำลังดึงข้อมูลจากชีต… · ':''}${err&&!A.length?esc(err)+' · ':''}แสดง ${show.length.toLocaleString()} จาก ${A.length.toLocaleString()} แถว (${tot.toLocaleString()} ${k==='rv'?'ราย':'ครั้ง'})${T?' · อัปเดต '+new Date(T).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' น.':''}</p>
  ${A.length?xdTbl(k,show,1):'<p class="note">ไม่พบข้อมูล</p>'}${A.length>show.length?`<button type="button" class="btn sm" data-xt="more">แสดงเพิ่มอีก ${Math.min(200,A.length-show.length)} แถว</button>`:''}`;
+ X.querySelectorAll('input[type=date][data-xf]').forEach(i=>{try{thDate(i)}catch(e){}});/* v221 วันที่แบบ วัน เดือน ปี */
  if(hadFocus){const q=X.querySelector('[data-xf="'+fkey+'"]');if(q){q.focus();try{q.setSelectionRange(caret,caret)}catch(e){}}}
  if(!X.dataset.w){X.dataset.w=1;let qt;
-  X.addEventListener('input',e=>{const xf=e.target.dataset&&e.target.dataset.xf;if(!xf||e.target.tagName==='SELECT'||e.target.type==='date')return;const kk=XDS.d;clearTimeout(qt);qt=setTimeout(()=>{const v=e.target.value.trim();if(v)XDF[kk][xf]=v;else delete XDF[kk][xf];XDN[kk]=200;xdTable(kk)},180)});
-  X.addEventListener('change',e=>{const xf=e.target.dataset&&e.target.dataset.xf;if(!xf||!(e.target.tagName==='SELECT'||e.target.type==='date'))return;const kk=XDS.d,v=e.target.value;if(v)XDF[kk][xf]=v;else delete XDF[kk][xf];if(xf==='mon'){delete XDF[kk].a;delete XDF[kk].b}else if(xf==='a'||xf==='b')delete XDF[kk].mon;XDN[kk]=200;xdTable(kk)});
+  X.addEventListener('input',e=>{const xf=e.target.dataset&&e.target.dataset.xf;if(!xf||e.target.tagName==='SELECT'||e.target.type==='date'||xf==='a'||xf==='b')return;const kk=XDS.d;clearTimeout(qt);qt=setTimeout(()=>{const v=e.target.value.trim();if(v)XDF[kk][xf]=v;else delete XDF[kk][xf];XDN[kk]=200;xdTable(kk)},180)});
+  X.addEventListener('change',e=>{const xf=e.target.dataset&&e.target.dataset.xf;if(!xf||!(e.target.tagName==='SELECT'||e.target.type==='date'||xf==='a'||xf==='b'))return;const kk=XDS.d,v=e.target.value;if(v)XDF[kk][xf]=v;else delete XDF[kk][xf];if(xf==='mon'){delete XDF[kk].a;delete XDF[kk].b}else if(xf==='a'||xf==='b')delete XDF[kk].mon;XDN[kk]=200;xdTable(kk)});
   X.addEventListener('click',async e=>{const kk=XDS.d,gb=e.target.closest('[data-xg]');if(gb){const gk=gb.dataset.xg,v=gb.dataset.v;if(!v||XDF[kk][gk]===v)delete XDF[kk][gk];else XDF[kk][gk]=v;XDN[kk]=200;xdTable(kk);return}
    const ed=e.target.closest('[data-xed]');if(ed){const r=(kk==='rv'?RV:IOR).find(x=>String(x.row)===ed.dataset.xed);if(r)xdGoForm(kk,r);return}
    const de=e.target.closest('[data-xdel]');if(de){const r=(kk==='rv'?RV:IOR).find(x=>String(x.row)===de.dataset.xdel);if(!r)return;
@@ -2559,6 +2560,8 @@ function xrPasteBind(){const go=$('xrpgo'),ta=$('xrptx');if(!go||!ta||go.__b)ret
  go.onclick=run;$('xrpcl').onclick=()=>{ta.value='';$('xrpms').innerHTML='';document.querySelectorAll('#xdf .af').forEach(e=>e.classList.remove('af'));ta.focus()};
  ta.addEventListener('paste',()=>setTimeout(run,30));
  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();run()}})}
+/* v221 วันที่ในตารางผู้ต้องหาหลายราย (จากข้อความ) ใช้ตัวเลือก วัน เดือน ปี แทนช่องวันที่ของเบราว์เซอร์ (ซึ่งอาจแสดงเดือนก่อน) */
+(()=>{if(typeof pmRender!=='function')return;const _r=pmRender;pmRender=function(){const r=_r.apply(this,arguments);try{const P=$('pmulti');P&&P.querySelectorAll('input[type=date]').forEach(i=>thDate(i))}catch(e){}return r}})();
 /*VP-START*/
 /* ===== VIEWPORT PICKER · PAGE STATE · FILTER STATE · MOTION ===== */
 (()=>{const RM=matchMedia('(prefers-reduced-motion: reduce)');const COARSE=matchMedia('(pointer:coarse)');
