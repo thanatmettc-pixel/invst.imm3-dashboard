@@ -2528,7 +2528,7 @@ var SP2=false,SP2S={};
 (()=>{const f=window.render;if(typeof f!=='function'||typeof fillIntel!=='function')return;window.render=function(){const r=f.apply(this,arguments);try{fillIntel()}catch(e){}return r}})();
 
 /* ===== v220 บันทึกเพิกถอน/ฟ้องใบแดง: ช่องวางข้อความ → ประมวลผลแล้วกรอกฟอร์มอัตโนมัติ ===== */
-function xrPasteCard(){return `<div class="card pst xrp"><div class="psh"><div><b>📝 วางข้อความหนังสือ / รายงานเพิกถอน–ฟ้องใบแดง</b><p>วางข้อความ (จาก LINE, หนังสือขอเพิกถอน, รายงานผล ฯลฯ) แล้วกด “ประมวลผล” ระบบจะแยกข้อมูลลงช่องในฟอร์มด้านล่าง (ช่องที่กรอกให้จะมีกรอบสีเหลือง) ตรวจสอบก่อนกดบันทึก</p></div></div>
+function xrPasteCard(){return `<div class="card pst xrp"><div class="psh"><div><b>📝 วางข้อความหนังสือ / รายงานเพิกถอน–ฟ้องใบแดง</b><p>วางข้อความ (จาก LINE, หนังสือขอเพิกถอน, รายงานผล ฯลฯ) แก้ข้อความได้ตามต้องการ แล้วกด “ประมวลผล” ระบบจึงจะแยกข้อมูลลงช่องในฟอร์มด้านล่าง (ช่องที่กรอกให้จะมีกรอบสีเหลือง) ตรวจสอบก่อนกดบันทึก</p></div></div>
 <textarea id="xrptx" rows="3" placeholder="ตัวอย่าง: ที่ ตช 0029.45/1084 ลงวันที่ 30 ก.ย. 2569 ตม.จว.นนทบุรี ขอเพิกถอนการอนุญาตให้อยู่ในราชอาณาจักร MR.RAJ KUMAR สัญชาติอินเดีย เพศชาย อายุ 41 ปี หนังสือเดินทาง Z1234567 กรณีทำงานโดยไม่ได้รับอนุญาต พงส. ร.ต.อ.หญิง จารุมน อัตบุตร"></textarea>
 <div class="psa"><button type="button" class="btn pr" id="xrpgo">⚙️ ประมวลผลและกรอกฟอร์ม</button><button type="button" class="btn" id="xrpcl">ล้างข้อความ</button></div><div id="xrpms"></div></div>`}
 function xrUniq(k){return[...new Set(RV.map(r=>String(r[k]||'').trim()).filter(v=>v&&v!=='ไม่ระบุ'))]}
@@ -2592,7 +2592,8 @@ function xrPasteBind(){const go=$('xrpgo'),ta=$('xrptx');if(!go||!ta||go.__b)ret
   ms.innerHTML=got.length?'✅ กรอกให้แล้ว '+got.length+' ช่อง: '+got.map(esc).join(' · ')+(miss.length?'<br><small>⚠️ ไม่พบ: '+miss.map(esc).join(' · ')+' — กรอกเองได้</small>':''):'⚠️ ไม่พบข้อมูลที่แยกได้ — ลองวางข้อความที่มี วันที่ / ชื่อ / สัญชาติ / ตม.จว.';
   const f=document.querySelector('#xdf .xdc');if(f)try{f.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
  go.onclick=run;$('xrpcl').onclick=()=>{ta.value='';$('xrpms').innerHTML='';document.querySelectorAll('#xdf .af').forEach(e=>e.classList.remove('af'));ta.focus()};
- ta.addEventListener('paste',()=>setTimeout(run,30));
+ /* v224 ไม่ประมวลผลอัตโนมัติตอนวาง — ให้แก้ข้อความได้ก่อน แล้วกดปุ่ม "ประมวลผล" เอง */
+ ta.addEventListener('paste',()=>setTimeout(()=>{const ms=$('xrpms');if(ms)ms.innerHTML='<span class="mu">📋 วางข้อความแล้ว — ตรวจ/แก้ข้อความได้ แล้วกด “⚙️ ประมวลผลและกรอกฟอร์ม”</span>'},30));
  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();run()}})}
 /* v221 วันที่ในตารางผู้ต้องหาหลายราย (จากข้อความ) ใช้ตัวเลือก วัน เดือน ปี แทนช่องวันที่ของเบราว์เซอร์ (ซึ่งอาจแสดงเดือนก่อน) */
 (()=>{if(typeof pmRender!=='function')return;const _r=pmRender;pmRender=function(){const r=_r.apply(this,arguments);try{const P=$('pmulti');P&&P.querySelectorAll('input[type=date]').forEach(i=>thDate(i))}catch(e){}return r}})();
