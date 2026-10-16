@@ -2568,8 +2568,8 @@ function xrParse(raw){const t=String(raw||'').replace(/[๐-๙]/g,c=>'๐๑๒
  if(!pp&&(m=body.match(/\b([A-Z]{1,3}\d{6,9})\b(?!\s*\/)/)))pp=m[1];
  if(!pp&&(m=body.match(/(?<!\d)(\d[\d\s-]{11,16}\d)(?!\d)/))){const d=m[1].replace(/\D/g,'');if(d.length===13)pp=d}
  if(pp)o.pp=pp.toUpperCase();
- if(m=body.match(/(?:จำนวน|รวม)\s*(\d{1,3})\s*(?:ราย|คน)/))o.num=m[1];
- if(!o.num&&(m=body.match(/ข้อ\s*2\.(\d+)\s*[-–]\s*2\.(\d+)/))&&+m[2]>+m[1])o.num=String(+m[2]-+m[1]+1);if(!o.num)o.num='1';
+ /* กฎ: ผู้ต้องหา 1 คน = 1 ราย (1 แถวในชีต) เสมอ — ไม่นับจาก "ข้อ 2.1-2.3" หรือ "กับพวก" */
+ o.num='1';
  /* คดี: ตีความจากข้อ 3 (ข้อสรุปของ กก.สก. — มาตรา/เหตุที่เพิกถอน) ก่อน ถ้าไม่ชัดจึงดูความผิดในข้อ 2 */
  const s3=body.search(/\n\s*3\s*[.)]|พิจารณาแล้ว/),det=s3>0?body.slice(0,s3):body,con=s3>0?body.slice(s3):'';
  const chs=xrUniq('charge'),pick=v=>chs.find(x=>ck(x)===ck(v))||v;
