@@ -2529,7 +2529,7 @@ var SP2=false,SP2S={};
 
 /* ===== v220 บันทึกเพิกถอน/ฟ้องใบแดง: ช่องวางข้อความ → ประมวลผลแล้วกรอกฟอร์มอัตโนมัติ ===== */
 function xrPasteCard(){return `<div class="card pst xrp"><div class="psh"><div><b>📝 วางข้อความหนังสือ / รายงานเพิกถอน–ฟ้องใบแดง</b><p>วางข้อความ (จาก LINE, หนังสือขอเพิกถอน, รายงานผล ฯลฯ) แก้ข้อความได้ตามต้องการ แล้วกด “ประมวลผล” ระบบจึงจะแยกข้อมูลลงช่องในฟอร์มด้านล่าง (ช่องที่กรอกให้จะมีกรอบสีเหลือง) ตรวจสอบก่อนกดบันทึก</p></div></div>
-<textarea id="xrptx" rows="3" placeholder="ตัวอย่าง: ที่ ตช 0029.45/1084 ลงวันที่ 30 ก.ย. 2569 ตม.จว.นนทบุรี ขอเพิกถอนการอนุญาตให้อยู่ในราชอาณาจักร MR.RAJ KUMAR สัญชาติอินเดีย เพศชาย อายุ 41 ปี หนังสือเดินทาง Z1234567 กรณีทำงานโดยไม่ได้รับอนุญาต พงส. ร.ต.อ.หญิง จารุมน อัตบุตร"></textarea>
+<textarea id="xrptx" rows="16" placeholder="ตัวอย่าง: ที่ ตช 0029.45/1084 ลงวันที่ 30 ก.ย. 2569 ตม.จว.นนทบุรี ขอเพิกถอนการอนุญาตให้อยู่ในราชอาณาจักร MR.RAJ KUMAR สัญชาติอินเดีย เพศชาย อายุ 41 ปี หนังสือเดินทาง Z1234567 กรณีทำงานโดยไม่ได้รับอนุญาต พงส. ร.ต.อ.หญิง จารุมน อัตบุตร"></textarea>
 <div class="psa"><button type="button" class="btn pr" id="xrpgo">⚙️ ประมวลผลและกรอกฟอร์ม</button><button type="button" class="btn" id="xrpcl">ล้างข้อความ</button></div><div id="xrpms"></div></div>`}
 function xrUniq(k){return[...new Set(RV.map(r=>String(r[k]||'').trim()).filter(v=>v&&v!=='ไม่ระบุ'))]}
 function xrBest(t,list){const T=ck(t);let best='';list.forEach(v=>{const k=ck(v);if(k.length>=3&&T.includes(k)&&k.length>ck(best).length)best=v});return best}
