@@ -2631,6 +2631,11 @@ function xiPasteBind(sm){const go=$('xipgo'),ta=$('xiptx');if(!go||!ta||go.__b)r
  ta.addEventListener('input',()=>{window.__xitx=ta.value});
  ta.addEventListener('paste',()=>setTimeout(()=>{window.__xitx=ta.value;const ms=$('xipms');if(ms)ms.innerHTML='<span class="mu">📋 วางข้อความแล้ว — ตรวจ/แก้ข้อความได้ แล้วกด “⚙️ ประมวลผลและกรอกฟอร์ม”</span>'},30));
  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();run()}})}
+
+/* v229 ทุกช่องวางข้อความ (ptx / เพิกถอน / IO): วางแล้วเว้น 1 บรรทัดว่างต่อท้ายอัตโนมัติ ให้วางฉบับถัดไปต่อได้เลย */
+document.addEventListener('paste',e=>{const ta=e.target;if(!ta||ta.tagName!=='TEXTAREA'||!/^(ptx|xrptx|xiptx)$/.test(ta.id))return;
+ setTimeout(()=>{if(ta.selectionStart!==ta.value.length&&ta.selectionStart!==ta.selectionEnd)return;const atEnd=ta.selectionEnd>=ta.value.replace(/\s+$/,'').length;if(!atEnd||!ta.value.trim())return;
+  const v=ta.value.replace(/\s+$/,'')+'\n\n';if(ta.value!==v){ta.value=v;try{ta.setSelectionRange(v.length,v.length)}catch(x){}ta.dispatchEvent(new Event('input',{bubbles:true}));ta.scrollTop=ta.scrollHeight}},40)},true);
 /*VP-START*/
 /* ===== VIEWPORT PICKER · PAGE STATE · FILTER STATE · MOTION ===== */
 (()=>{const RM=matchMedia('(prefers-reduced-motion: reduce)');const COARSE=matchMedia('(pointer:coarse)');
