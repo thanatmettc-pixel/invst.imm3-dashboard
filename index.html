@@ -2274,9 +2274,12 @@ body.rflow #sheet .ins>.dock{position:relative!important;right:auto!important;bo
 #xrpms{margin-top:6px;font-size:13px}
 
 /* v226 ช่องวางข้อความเพิกถอน: ตัวเล็กลง แคบลง สูงขึ้น (ข้อความส่วนใหญ่ยาวแนวตั้ง) */
-#xdf>.xrp textarea#xrptx{font-size:12px!important;line-height:1.45!important;width:min(460px,100%)!important;max-width:100%;height:340px;min-height:220px;resize:vertical;display:block}
+#xdf>.xrp textarea#xrptx,#xdf>.xrp textarea#xiptx{font-size:12px!important;line-height:1.45!important;width:min(460px,100%)!important;max-width:100%;height:340px;min-height:220px;resize:vertical;display:block}
 #xdf>.xrp .psa{margin-top:8px}
-@media(max-width:700px){#xdf>.xrp textarea#xrptx{width:100%!important;height:260px}}
+@media(max-width:700px){#xdf>.xrp textarea#xrptx,#xdf>.xrp textarea#xiptx{width:100%!important;height:260px}}
+
+#xipms{margin-top:6px;font-size:13px}
+#xdf .xdio input.af{outline:2px solid #f59e0b;background-color:color-mix(in srgb,#fbbf24 16%,var(--c,#fff))!important}
 </style><script>/* ตัวแสดงข้อผิดพลาด (ช่วยหาสาเหตุบนเซิร์ฟเวอร์จริง) */
 (function(){var E=window.__werr=[];var show=function(){var b=document.getElementById('werr');if(!E.length)return;if(!b){b=document.createElement('div');b.id='werr';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#7f1d1d;color:#fff;font:12px/1.5 monospace;padding:10px 12px;border-radius:10px;max-height:45vh;overflow:auto;white-space:pre-wrap;box-shadow:0 6px 24px rgba(0,0,0,.4)';(document.body||document.documentElement).appendChild(b)}b.textContent='⚠️ ข้อผิดพลาดของหน้าเว็บ (ถ่ายภาพส่งให้ Claude):\n'+E.slice(0,12).join('\n')};
 window.__werrShow=show;
@@ -2401,4 +2404,4 @@ body.web #sheet{padding-bottom:44px}
 </div></div></div>
 <div id="dwbg" class="dwbg"></div><aside id="dw" class="dw" aria-hidden="true"><div class="dwh"><div class="dwhl"><div class="dwt" id="dwt"></div><div class="dwc" id="dwc"></div></div><button type="button" class="btn sm blbtn blb2" aria-pressed="false"><i class="bi"></i><span>เบลอชื่อ/พาสปอร์ต</span></button><button type="button" class="dwx" id="dwx" aria-label="ปิด">✕</button></div><div class="dwb" id="dwb"></div><div class="dwf"><button type="button" class="btn pr" id="dap">🔎 ใช้เป็นตัวกรอง แล้วเปิดในตารางข้อมูล</button><button type="button" class="btn" id="dad">📊 ใช้เป็นตัวกรองบนแดชบอร์ด</button></div></aside>
 </main>
-<script src="https://cdn.jsdelivr.net/gh/thanatmettc-pixel/invst.imm3-dashboard@c1745c061c869321c40502fa4d16acd91488f8e3/app.js" crossorigin="anonymous" onerror="(window.__werr=window.__werr||[]).push('โหลดโค้ดแอปจาก jsDelivr ไม่สำเร็จ');window.__werrShow&&__werrShow()"></script></body></html>
+<script src="https://cdn.jsdelivr.net/gh/thanatmettc-pixel/invst.imm3-dashboard@9e0b139ae0547bcf77ade5aff45fd57b73e04f4f/app.js" crossorigin="anonymous" onerror="(window.__werr=window.__werr||[]).push('โหลดโค้ดแอปจาก jsDelivr ไม่สำเร็จ');window.__werrShow&&__werrShow()"></script></body></html>
