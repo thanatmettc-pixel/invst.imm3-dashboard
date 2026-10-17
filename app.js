@@ -2111,7 +2111,7 @@ function xdForm(k){const X=$('xdf');if(!X)return;const E=XDE[k];
   ${xdActs(k,E)}</div>${xdListCard(k)}`;
   thDate($('xr_date'));['date','type','doc','off','unit','name','nat','sex','pp','age','num','charge','note'].forEach(f=>{const el=$('xr_'+f);if(el)el.value=o[f]==null?'':String(o[f])});if(!$('xr_num').value)$('xr_num').value='1';try{xrPasteBind()}catch(e){}}
  else{const one=!!E,o=E||{date:xdToday()};
-  X.innerHTML=`<div class="card xdc"><div class="ch">${xdHd('io',E?'แก้ไขข้อมูล IO':'บันทึกผลงาน IO',E?'แถว '+E.row+' ในชีต “'+esc(ioSrc().name)+'”':'กรอกตัวเลขของแต่ละชุด แล้วกดบันทึก',E?'edit':'')}<span class="req"><b>*</b> จำเป็นต้องกรอก</span></div>
+  X.innerHTML=(E?'':xiPasteCard())+`<div class="card xdc"><div class="ch">${xdHd('io',E?'แก้ไขข้อมูล IO':'บันทึกผลงาน IO',E?'แถว '+E.row+' ในชีต “'+esc(ioSrc().name)+'”':'กรอกตัวเลขของแต่ละชุด แล้วกดบันทึก',E?'edit':'')}<span class="req"><b>*</b> จำเป็นต้องกรอก</span></div>
   <fieldset class="sec s1"><legend><i>1</i>วันที่รายงาน</legend><div class="fg">
    <div>${E&&E.agg?`<label>เดือน</label><input value="${esc(ioMl(E.mon))} (สรุปรายเดือน)" disabled>`:'<label>วันที่ <b>*</b></label><input type="date" id="xi_date">'}</div>
    <div><label>เดือน (คอลัมน์ “เดือน” ในชีต)</label><input id="xi_mon" disabled></div></div></fieldset>
@@ -2122,7 +2122,7 @@ function xdForm(k){const X=$('xdf');if(!X)return;const E=XDE[k];
   ${xdActs(k,E)}</div>${xdListCard(k)}`;
   if($('xi_date')){thDate($('xi_date'));$('xi_date').value=o.date||xdToday()}
   const sm=()=>{X.querySelectorAll('.xdio .xir').forEach(r=>{let s=0;r.querySelectorAll('input').forEach(i=>s+=+i.value||0);r.querySelector('em').textContent=s.toLocaleString()});const d=E&&E.agg?E.mon+'-01':($('xi_date')&&$('xi_date').value)||'';$('xi_mon').value=d?ioMl(d.slice(0,7))+' ('+(+d.slice(5,7))+')':''};
-  X.querySelector('.xdio').addEventListener('input',sm);if($('xi_date'))$('xi_date').addEventListener('change',sm);sm()}
+  X.querySelector('.xdio').addEventListener('input',sm);if($('xi_date'))$('xi_date').addEventListener('change',sm);sm();try{xiPasteBind(sm)}catch(e){}}
  xdWire(k)}
 function xdActs(k,E){return`<div class="xdact"><button type="button" class="btn pr" id="xdsave">💾 ${E?'บันทึกการแก้ไข':'บันทึกลง Google Sheets'}</button>${E?'<button type="button" class="btn" id="xdcan">✕ ยกเลิกการแก้ไข</button><button type="button" class="btn dg" id="xddel">🗑 ลบแถวนี้</button>':'<button type="button" class="btn" id="xdclr">↺ ล้างฟอร์ม</button>'}<span class="xdst" id="xdst" role="status"></span></div>
  <p class="note">บันทึกสองทาง: กดบันทึกแล้วระบบเขียนลงชีต “${esc((k==='rv'?rvSrc():ioSrc()).name)}” ทันที แล้วดึงข้อมูลกลับมาแสดงในแดชบอร์ดและตาราง · แก้ไขที่ชีตโดยตรงก็จะเห็นในแอปเมื่อกด “อัปเดตข้อมูล”</p>`}
@@ -2599,6 +2599,38 @@ function xrPasteBind(){const go=$('xrpgo'),ta=$('xrptx');if(!go||!ta||go.__b)ret
  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();run()}})}
 /* v221 วันที่ในตารางผู้ต้องหาหลายราย (จากข้อความ) ใช้ตัวเลือก วัน เดือน ปี แทนช่องวันที่ของเบราว์เซอร์ (ซึ่งอาจแสดงเดือนก่อน) */
 (()=>{if(typeof pmRender!=='function')return;const _r=pmRender;pmRender=function(){const r=_r.apply(this,arguments);try{const P=$('pmulti');P&&P.querySelectorAll('input[type=date]').forEach(i=>thDate(i))}catch(e){}return r}})();
+
+/* v228 IO: วางข้อความรายงานเพื่อวิเคราะห์/กรอกอัตโนมัติ (กดประมวลผลเอง, ข้อความคงอยู่จนกดล้าง) */
+function xiPasteCard(){return `<div class="card pst xrp xip"><div class="psh"><div><b>📝 วางข้อความรายงาน IO เพื่อวิเคราะห์</b><p>วางข้อความรายงานผล (จาก LINE ฯลฯ) แก้ไขได้ แล้วกด “ประมวลผล” ระบบจะแยกวันที่ และตัวเลข สุ่มตรวจขออยู่ต่อ · (ม.37/38) · ข้อมูลท้องถิ่น ของแต่ละ ชป. ลงตารางด้านล่าง (ช่องที่กรอกให้จะมีกรอบสีเหลือง) ตรวจก่อนกดบันทึก</p></div></div>
+<textarea id="xiptx" rows="16" placeholder="ตัวอย่าง: ผลการปฏิบัติ ชป.1 วันที่ 14 ต.ค. 69 สุ่มตรวจขออยู่ต่อ 5 ครั้ง การดำเนินการตามมาตรา 38 12 ครั้ง การจัดทำข้อมูลท้องถิ่น 40 ครั้ง ชป.2 ...">${esc(window.__xitx||'')}</textarea>
+<div class="psa"><button type="button" class="btn pr" id="xipgo">⚙️ ประมวลผลและกรอกฟอร์ม</button><button type="button" class="btn" id="xipcl">ล้างข้อความ</button></div><div id="xipms"></div></div>`}
+function xiParse(raw){const t=String(raw||'').replace(/[\u0e50-\u0e59]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x0e50+48)).replace(/\r/g,''),o={date:'',teams:{}};
+ try{o.date=pxDate(t)||''}catch(e){}
+ const num=s=>+String(s).replace(/,/g,'')||0;
+ /* แบ่งตามชุด: ชป.1 / ชป 2 / ชุดปฏิบัติที่ 3 */
+ const re=/(?:ชป\.?|ชุด(?:ปฏิบัติ)?(?:ที่)?)\s*([123])(?!\d)/g,ms=[...t.matchAll(re)];
+ const segs=ms.length?ms.map((m,i)=>({team:'ชป.'+m[1],txt:t.slice(m.index,i+1<ms.length?ms[i+1].index:t.length)})):[{team:'',txt:t}];
+ segs.forEach(g=>{const x=g.txt,r={};
+  let m=x.match(/(?:สุ่มตรวจ|ขออยู่ต่อ|non[\s-]?b)[^\d\n]{0,40}?(\d[\d,]*)/i);if(m)r.nonb=num(m[1]);
+  /* (ม.37/38): ใช้ยอด “ตามมาตรา 38 N ครั้ง” ถ้ามี ไม่งั้นรวม ม.37 + ม.38 */
+  m=x.match(/(?:ตาม)?มาตรา\s*38[^\d\n]{0,15}?(\d[\d,]*)\s*ครั้ง/)||x.match(/(?:ตาม)?มาตรา\s*37\/38[^\d\n]{0,15}?(\d[\d,]*)/);
+  if(m)r.dorm=num(m[1]);else{const a=x.match(/ม\.?\s*37[^\d\n]{0,10}?(\d[\d,]*)\s*(?:ราย|ครั้ง)/),b=x.match(/ม\.?\s*38[^\d\n]{0,10}?(\d[\d,]*)\s*(?:ราย|ครั้ง)/);if(a||b)r.dorm=(a?num(a[1]):0)+(b?num(b[1]):0)}
+  m=x.match(/(?:ข้อมูลท้องถิ่น|ท้องถิ่น)[^\d\n]{0,40}?(\d[\d,]*)/);if(m)r.local=num(m[1]);
+  if(Object.keys(r).length){const k=g.team||'ชป.1';o.teams[k]=Object.assign(o.teams[k]||{},r);if(!g.team)o.noTeam=true}});
+ return o}
+function xiPasteBind(sm){const go=$('xipgo'),ta=$('xiptx');if(!go||!ta||go.__b)return;go.__b=1;
+ const clr=()=>document.querySelectorAll('#xdf .af').forEach(e=>e.classList.remove('af'));
+ const run=()=>{window.__xitx=ta.value;const v=ta.value.trim(),ms=$('xipms');clr();if(!v){ms.innerHTML='<span class="mu">วางข้อความก่อน แล้วกดประมวลผล</span>';ta.focus();return}
+  const o=xiParse(v),got=[];
+  if(o.date&&$('xi_date')){$('xi_date').value=o.date;$('xi_date').dispatchEvent(new Event('change',{bubbles:true}));const w=$('xi_date').nextElementSibling;(w&&w.classList.contains('dsel')?w:$('xi_date')).classList.add('af');got.push('วันที่')}
+  Object.keys(o.teams).forEach(tm=>{const row=document.querySelector('#xdf .xir[data-tm="'+tm+'"]');if(!row)return;Object.keys(o.teams[tm]).forEach(f=>{const i=row.querySelector('input[data-f="'+f+'"]');if(!i)return;i.value=o.teams[tm][f];i.classList.add('af');got.push(tm+' '+(IOK.find(x=>x[0]===f)||[,f])[2]+' '+o.teams[tm][f])})});
+  sm&&sm();
+  ms.innerHTML=got.length?'✅ กรอกให้แล้ว '+got.length+' ช่อง: '+got.map(esc).join(' · ')+(o.date?'':'<br><small>⚠️ ไม่พบวันที่ — เลือกเอง</small>')+(o.noTeam?'<br><small>⚠️ ไม่พบ ชป. ในข้อความ — ใส่ไว้ที่ ชป.1 ย้ายได้เอง</small>':''):'⚠️ ไม่พบตัวเลขที่แยกได้ — ลองวางข้อความที่มีคำว่า สุ่มตรวจขออยู่ต่อ / มาตรา 38 / ข้อมูลท้องถิ่น';
+  const f=document.querySelector('#xdf .xdc');if(f)try{f.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
+ go.onclick=run;$('xipcl').onclick=()=>{ta.value='';window.__xitx='';$('xipms').innerHTML='';clr();ta.focus()};
+ ta.addEventListener('input',()=>{window.__xitx=ta.value});
+ ta.addEventListener('paste',()=>setTimeout(()=>{window.__xitx=ta.value;const ms=$('xipms');if(ms)ms.innerHTML='<span class="mu">📋 วางข้อความแล้ว — ตรวจ/แก้ข้อความได้ แล้วกด “⚙️ ประมวลผลและกรอกฟอร์ม”</span>'},30));
+ ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();run()}})}
 /*VP-START*/
 /* ===== VIEWPORT PICKER · PAGE STATE · FILTER STATE · MOTION ===== */
 (()=>{const RM=matchMedia('(prefers-reduced-motion: reduce)');const COARSE=matchMedia('(pointer:coarse)');
