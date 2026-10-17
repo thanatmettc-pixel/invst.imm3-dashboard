@@ -2611,9 +2611,11 @@ function xiParse(raw){const t=String(raw||'').replace(/[\u0e50-\u0e59]/g,c=>Stri
  const re=/(?:ชป\.?|ชุด(?:ปฏิบัติ)?(?:ที่)?)\s*([123])(?!\d)/g,ms=[...t.matchAll(re)];
  const segs=ms.length?ms.map((m,i)=>({team:'ชป.'+m[1],txt:t.slice(m.index,i+1<ms.length?ms[i+1].index:t.length)})):[{team:'',txt:t}];
  segs.forEach(g=>{const x=g.txt,r={};
-  let m=x.match(/(?:สุ่มตรวจ|ขออยู่ต่อ|non[\s-]?b)[^\d\n]{0,40}?(\d[\d,]*)/i);if(m)r.nonb=num(m[1]);
+  /* สุ่มตรวจขออยู่ต่อ: ใช้ “Non-B ... จำนวน N ครั้ง” ก่อน ไม่มีก็ใช้ “ออกตรวจ N ครั้ง” ตัวสุดท้ายในหัวข้อ 1 (ก่อนหัวข้อ 2) */
+  let m=x.match(/non[\s-]?b[^\n\d]{0,30}?จำนวน\s*(\d[\d,]*)/i);if(m)r.nonb=num(m[1]);
+  else{const i1=x.search(/สุ่มตรวจ|ขออยู่ต่อ/);if(i1>=0){let sec=x.slice(i1);const e2=sec.search(/\n\s*2\s*\.|การดำเนินการ|การจัดทำข้อมูล/);if(e2>0)sec=sec.slice(0,e2);const all=[...sec.matchAll(/ออกตรวจ\s*(\d[\d,]*)\s*ครั้ง/g)];if(all.length)r.nonb=num(all[all.length-1][1]);else{const q=sec.match(/(?:สุ่มตรวจ|ขออยู่ต่อ|non[\s-]?b)[^\d\n]{0,40}?(\d[\d,]*)/i);if(q)r.nonb=num(q[1])}}}
   /* (ม.37/38): ใช้ยอด “ตามมาตรา 38 N ครั้ง” ถ้ามี ไม่งั้นรวม ม.37 + ม.38 */
-  m=x.match(/(?:ตาม)?มาตรา\s*38[^\d\n]{0,15}?(\d[\d,]*)\s*ครั้ง/)||x.match(/(?:ตาม)?มาตรา\s*37\/38[^\d\n]{0,15}?(\d[\d,]*)/);
+  m=x.match(/(?:ตาม)?ม(?:าตรา|\.)\s*38[^\d\n]{0,15}?(\d[\d,]*)\s*ครั้ง/)||x.match(/(?:ตาม)?มาตรา\s*37\/38[^\d\n]{0,15}?(\d[\d,]*)/);
   if(m)r.dorm=num(m[1]);else{const a=x.match(/ม\.?\s*37[^\d\n]{0,10}?(\d[\d,]*)\s*(?:ราย|ครั้ง)/),b=x.match(/ม\.?\s*38[^\d\n]{0,10}?(\d[\d,]*)\s*(?:ราย|ครั้ง)/);if(a||b)r.dorm=(a?num(a[1]):0)+(b?num(b[1]):0)}
   m=x.match(/(?:ข้อมูลท้องถิ่น|ท้องถิ่น)[^\d\n]{0,40}?(\d[\d,]*)/);if(m)r.local=num(m[1]);
   if(Object.keys(r).length){const k=g.team||'ชป.1';o.teams[k]=Object.assign(o.teams[k]||{},r);if(!g.team)o.noTeam=true}});
