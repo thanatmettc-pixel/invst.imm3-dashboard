@@ -758,7 +758,7 @@ const blank=()=>{const r={};F.forEach(k=>r[k]='');r.num='1';r.type='จับเ
 function clean(r){const o=Object.assign(blank(),r);F.forEach(k=>o[k]=o[k]==null?'':String(o[k]).trim());
  let m=o.date.match(/^(\d{4})-(\d\d)-(\d\d)$/);if(m){if(+m[1]>2400)o.date=(m[1]-543)+'-'+m[2]+'-'+m[3]}else o.date='';
  m=o.team.match(/ชป\.?\s*([1-3])/);o.team=m?'ชป.'+m[1]:'';o.type=/ร่วม/.test(o.type)?'ร่วมจับ':'จับเอง';
- if(!IO.includes(o.intel))o.intel='';o.sex=/หญิง/.test(o.sex)?'หญิง':/ชาย/.test(o.sex)?'ชาย':'ไม่ระบุ';o.num=String(+o.num||1);o.cases=String(o.cases||'').replace(/[^\d]/g,'');if(!+o.cases)o.cases=o.num;o.fine=o.fine.replace(/[^\d]/g,'');o.age=o.age.replace(/[^\d]/g,'');if(!lkN(o.link))o.link='';return normRec(o)}
+ if(!IO.includes(o.intel))o.intel='';o.sex=/หญิง/.test(o.sex)?'หญิง':/ชาย/.test(o.sex)?'ชาย':'ไม่ระบุ';o.num=/ตรวจค้น|ขยายผล/.test(o.charge)?'0':String(+o.num||1);o.cases=String(o.cases||'').replace(/[^\d]/g,'');if(!+o.cases)o.cases=o.num;o.fine=o.fine.replace(/[^\d]/g,'');o.age=o.age.replace(/[^\d]/g,'');if(!lkN(o.link))o.link='';return normRec(o)}
 const okRec=r=>r.date&&r.team&&r.nat&&r.charge;
 async function txt(f){const b=await f.arrayBuffer();
  if(/\.docx$/i.test(f.name))return(await mammoth.extractRawText({arrayBuffer:b})).value;
