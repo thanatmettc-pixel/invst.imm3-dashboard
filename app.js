@@ -1727,7 +1727,7 @@ function rvRender(){if(IOMODE)return ioRender();if(!RVMODE)return;rvPanel();rvFi
  const K=([a,b,i,c,k])=>`<div data-kpi="${a}" data-rkk="${k}" style="--ac:${c};--ag:${c}88"><em>${i}</em><b>${b}</b><span>${a}</span></div>`;
  const kp=$('kp');kp.classList.remove('cmpon');
  kp.innerHTML=K(['ผู้ต้องหารวม (ราย)',A.n.toLocaleString(),'👥',RVK.n,'n'])+`<div class="pr2" style="--ac:${RVTC['ฟ้องใบแดง']};--ag:${RVTC['ฟ้องใบแดง']}88">${KR(['เพิกถอน (ราย)',A.x.toLocaleString(),'🚫',RVTC['เพิกถอน'],'x'])}${KR(['ฟ้องใบแดง (ราย)',A.y.toLocaleString(),'🟥',RVTC['ฟ้องใบแดง'],'y'])}</div>`
-  +K(['สัญชาติ',A.nat,'🌐',RVK.nat,'nat'])+K(['ข้อหา (ประเภท)',A.chg,'⚖️',RVK.chg,'chg'])+K(['ตม.จว.ที่ยื่น (หน่วย)',A.unit,'🏢',RVK.unit,'unit'])+K(['พงส.เจ้าของคดี (คน)',A.off,'👮',RVK.off,'off']);
+  +K(['สัญชาติ',A.nat,'🌐',RVK.nat,'nat'])+K(['ข้อหา (ประเภท)',A.chg,'⚖️',RVK.chg,'chg'])+K(['ตม.จว.ที่ยื่น (หน่วย)',A.unit,'🏢',RVK.unit,'unit']);
  /* สรุปสำหรับผู้บังคับบัญชา */
  const top=(S,k)=>rvCnt(S,k).filter(x=>x[0]!=='ไม่ระบุ'),t1=a=>a[0]||null,key=rvKey();
  if(RVAI&&RVAI.key===key){$('insm').textContent='✨ วิเคราะห์โดย Claude';$('insl').innerHTML=RVAI.lines.map(l=>'<li>'+esc(l)+'</li>').join('')}
