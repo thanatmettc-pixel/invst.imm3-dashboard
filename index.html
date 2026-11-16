@@ -2108,6 +2108,12 @@ body.split2 #sp2 .rvrw{grid-template-columns:auto minmax(0,1fr)!important}
 #sheet.fcomp #tt .dv{min-width:46px}
 #sheet.fcomp #kp>div:not(.pr2){display:flex;flex-direction:column;justify-content:center}
 
+/* v-fix: การ์ด ชป. ไม่ล้นกรอบ */
+#sheet .cg>div:has(>.tw){overflow:hidden}
+.tw{min-width:0}.tw .dlg{width:auto!important;flex:0 1 auto;min-width:0;max-width:58%}
+.dlg .dr{grid-template-columns:10px minmax(0,1fr) auto!important;min-width:0}
+.dlg .dn1 b,.dlg .dn1 small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+body.rflow #sheet .tw .dlg{max-width:100%}
 /* ===== v185 โหมด 2 จอ: การ์ดตารางข้อมูล + ข้อความสรุปรายงาน ===== */
 #s .sp2c{margin:0;padding:12px 14px;border-radius:14px}
 #s .sp2c>.ch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px}
