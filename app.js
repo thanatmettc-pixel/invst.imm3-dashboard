@@ -427,7 +427,7 @@ function barsAnim(){BAPEND=false;return;try{if(matchMedia('(prefers-reduced-moti
  setTimeout(()=>L.forEach(e=>{e.style.transition=''}),1700)}
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>setTimeout(()=>{if(BAPEND)barsAnim()},80)));
 function make(id,cfg){if(CH[id])CH[id].destroy();cfg.options=Object.assign({animation:false,responsive:true,maintainAspectRatio:false,onHover:(e,el)=>{e.native&&(e.native.target.style.cursor=el.length?'pointer':'default')}},cfg.options,cfg.options0||{});delete cfg.options0;CH[id]=new Chart($(id),cfg)}
-let CMP='prev',CMA='',CMB='';try{CMP=localStorage.getItem('tm3_cmp')||'prev';CMA=localStorage.getItem('tm3_cmpa')||'';CMB=localStorage.getItem('tm3_cmpb')||''}catch(e){}
+let CMP='off',CMA='',CMB='';try{CMP=localStorage.getItem('tm3_cmp2')||'off';CMA=localStorage.getItem('tm3_cmpa')||'';CMB=localStorage.getItem('tm3_cmpb')||''}catch(e){}
 if(!['prev','mom','qoq','yoy','avg3','custom','team','off'].includes(CMP))CMP='prev';
 const CMPN={prev:'ช่วงก่อนหน้า',mom:'เดือนก่อน',qoq:'ไตรมาสก่อน',yoy:'ช่วงเดียวกันปีก่อน',avg3:'ค่าเฉลี่ย 3 เดือนก่อนหน้า',custom:'ช่วงที่กำหนดเอง'};
 const shM=(d,k)=>{const e=d.getDate()==new Date(d.getFullYear(),d.getMonth()+1,0).getDate(),t=new Date(d.getFullYear(),d.getMonth()+k,1),L=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();return new Date(t.getFullYear(),t.getMonth(),e?L:Math.min(d.getDate(),L))};
@@ -954,7 +954,7 @@ document.addEventListener('keydown',e=>{if(e.key=='F12'){e.preventDefault();pres
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&PRES)presOff()});
 addEventListener('resize',()=>{if(PRES)pFit()});document.addEventListener('mousemove',()=>{if(PRES)pShow()});
 document.querySelectorAll('nav [data-t]').forEach(b=>b.addEventListener('click',()=>{if(PRES){pTitle();setTimeout(pFit,60)}}));
-fillDL();{const sel=$('cmps'),ca=$('cmpa'),cb=$('cmpb'),cc=$('cmpc');sel.value=CMP;ca.value=CMA;cb.value=CMB;const vis=()=>cc.classList.toggle('on',CMP=='custom'),sv=()=>{try{localStorage.setItem('tm3_cmp',CMP);localStorage.setItem('tm3_cmpa',CMA);localStorage.setItem('tm3_cmpb',CMB)}catch(e){}};vis();
+fillDL();{const sel=$('cmps'),ca=$('cmpa'),cb=$('cmpb'),cc=$('cmpc');sel.value=CMP;ca.value=CMA;cb.value=CMB;const vis=()=>cc.classList.toggle('on',CMP=='custom'),sv=()=>{try{localStorage.setItem('tm3_cmp2',CMP);localStorage.setItem('tm3_cmpa',CMA);localStorage.setItem('tm3_cmpb',CMB)}catch(e){}};vis();
  const ob=$('cmpoff'),ov=()=>{ob.className='btn sm '+(CMP=='off'?'grn':'red');ob.textContent=CMP=='off'?'✔ เปิดการเปรียบเทียบ':'✖ ปิดการเปรียบเทียบ'};ov();let last=CMP=='off'?'prev':CMP;
  sel.onchange=()=>{CMP=sel.value;if(CMP!='off')last=CMP;ov();if(CMP=='custom'&&!(CMA&&CMB)){const per=periodOf();if(per){const q=(()=>{const c=CMP;CMP='prev';const r=prevOf(per);CMP=c;return r})();if(q){CMA=q.A;CMB=q.B;ca.value=CMA;cb.value=CMB}}}vis();sv();render()};
  ob.onclick=()=>{if(CMP=='off'){CMP=last}else{last=CMP;CMP='off'}sel.value=CMP;vis();ov();sv();render()};
