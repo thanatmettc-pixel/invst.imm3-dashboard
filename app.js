@@ -1757,7 +1757,7 @@ function rvRender(){if(IOMODE)return ioRender();if(!RVMODE)return;rvPanel();rvFi
  rvBelow(R,N);requestAnimationFrame(kpFit)}
 /* ---- สรุปตามหัวตาราง + ตารางรายการ ---- */
 function rvBelow(R,N){const X=$('rvx');if(!X)return;const NT=N||1;
- const D=[['type','การปฏิบัติ','⚖️'],['mon','เดือน','🗓️'],['charge','คดี','📁'],['nat','สัญชาติ','🌐'],['off','พงส.เจ้าของคดี','👮'],['unit','ตม.จว.ที่ยื่นเรื่อง','🏢'],['sex','เพศ','🚻'],['ageb','ช่วงอายุ','🎂']];
+ const D=[['type','การปฏิบัติ','⚖️'],['mon','เดือน','🗓️'],['charge','คดี','📁'],['nat','สัญชาติ','🌐'],['unit','ตม.จว.ที่ยื่นเรื่อง','🏢'],['sex','เพศ','🚻'],['ageb','ช่วงอายุ','🎂']];
  const card=([k,l,ic])=>{let a=rvCnt(R,k);if(k==='mon')a=a.sort((x,y)=>x[0]<y[0]?1:-1);if(k==='ageb'){const o=RVAB.map(x=>x[1]);a=a.sort((x,y)=>o.indexOf(x[0])-o.indexOf(y[0]))}
   const mx=Math.max(1,...a.map(x=>x[1])),open=RVOPEN[k],show=open?a:a.slice(0,8),cur=RVF[k]||'';
   const extra=k==='off'&&RVOFF?`<button type="button" class="rvmo" data-roff>${RVOFF.ai?'✅ Claude ตรวจชื่อซ้ำแล้ว':'⚙️ รวมชื่อที่สะกดต่างกันแล้ว'} · ดูรายละเอียด</button>`:'';
